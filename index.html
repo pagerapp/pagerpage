@@ -111,13 +111,15 @@
         }
 
         /* Image Masks */
-        .mask-right {
-            mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
-            -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
-        }
         .mask-bottom {
             mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
             -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+        }
+
+        /* Scroll Text Reveal (JS Animation) */
+        .word-span {
+            opacity: 0.15;
+            transition: opacity 0.1s ease;
         }
 
         .scroll-container {
@@ -170,21 +172,25 @@
         </div>
     </nav>
 
-    <!-- БЛОК: Hero -->
-    <header class="relative min-h-screen flex items-center overflow-hidden border-b border-white/10" id="hero-section">
-        <div class="absolute inset-0 z-0 bg-tech-grid pointer-events-none"></div>
+    <!-- БЛОК: Hero (Full-Bleed, Бесшовный сплит) -->
+    <header class="relative min-h-screen flex items-center overflow-hidden border-b border-white/10 bg-black" id="hero-section">
+        
+        <!-- Фоновая картинка с зашитым сплитом -->
         <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent w-full md:w-[60%] lg:w-[50%] h-full z-10"></div>
-            <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/hero_block_background_001.jpg?raw=true" class="w-full h-full object-cover object-right opacity-80 mask-right" alt="PAGER Vision">
+            <!-- Страховочный градиент только на самый край, если монитор ультраширокий -->
+            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent w-full md:w-[45%] h-full z-10"></div>
+            <!-- Картинка выровнена по правому краю, её черный фон сливается с bg-black -->
+            <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/hero_block_desktop_background_003.jpg?raw=true" class="w-full h-full object-cover object-right opacity-100" alt="PAGER Vision">
         </div>
 
         <div class="relative z-20 w-full max-w-7xl mx-auto px-6 pt-24 md:pt-0">
-            <div class="w-full md:w-[70%] lg:w-[60%] reveal-up">
-                <span class="inline-flex items-center bg-white/5 border border-white/10 text-pager px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-8">
+            <!-- Текст ограничен шириной и расположен ровно в пустоте рендера -->
+            <div class="w-full md:w-[55%] lg:w-[45%] reveal-up">
+                <span class="inline-flex items-center bg-white/5 border border-white/10 text-pager px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-8">
                     Новая модель цифрового общения
                 </span>
                 
-                <h1 class="text-[3.5rem] sm:text-6xl md:text-7xl font-heading font-extrabold mb-6 text-white leading-[1.0] tracking-tighter uppercase">
+                <h1 class="text-[3.4rem] sm:text-6xl md:text-[5.5rem] lg:text-[6rem] font-heading font-extrabold mb-6 text-white leading-[0.95] tracking-tighter uppercase">
                     РАЗНЫЙ.<br>НО ВСЕГДА<br><span class="text-pager">Я!</span>
                 </h1>
                 
@@ -195,7 +201,7 @@
                     <a href="#demo" class="btn-secondary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Посмотреть, как это работает</a>
                 </div>
 
-                <p class="text-xs font-semibold text-zinc-500 uppercase tracking-widest pt-6 border-t border-white/10">Один человек. Много сторон. Свой способ общения для каждого.</p>
+                <p class="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest pt-6 border-t border-white/10">Один человек. Много сторон. Свой способ общения для каждого.</p>
             </div>
         </div>
     </header>
@@ -429,7 +435,6 @@
         </div>
 
         <div class="md:hidden flex flex-col px-6 pb-20 space-y-6">
-            <!-- Mobile Fallback with all text -->
             <div class="glow-card p-6 reveal-up">
                 <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/Multiprofiles_mobile_img_1.png?raw=true" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Проблема">
                 <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Проблема</span>
@@ -442,7 +447,6 @@
                 <p class="text-zinc-400 text-sm leading-relaxed mb-4">В реальной жизни мы разные: в семье; в работе; с друзьями; с незнакомыми людьми.</p>
                 <p class="text-white font-semibold text-sm border-l-2 border-pager pl-4">Это не разные личности. Это разные грани одного человека.</p>
             </div>
-            <!-- etc for mobile -->
         </div>
     </section>
 
@@ -659,13 +663,13 @@
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="text-center max-w-4xl mx-auto mb-20 reveal-up">
                 <span class="badge mb-6">человек → условия связи → сообщение</span>
-                <h2 class="font-heading text-4xl md:text-6xl mb-6 text-white tracking-tighter font-bold">
+                <h2 class="text-reveal-scrub font-heading text-4xl md:text-6xl mb-6 text-white tracking-tighter font-bold">
                     Правила видны до начала разговора.
                 </h2>
-                <p class="text-lg text-zinc-400 font-medium leading-relaxed mb-4">
+                <p class="text-reveal-scrub text-lg text-zinc-400 font-medium leading-relaxed mb-4">
                     Сегодня цифровое общение начинается с доступа: человек получает возможность написать или позвонить, а правила взаимодействия формируются уже после или вообще отсутствуют.
                 </p>
-                <p class="text-lg text-white font-bold leading-relaxed">
+                <p class="text-reveal-scrub text-lg text-white font-bold leading-relaxed">
                     PAGER меняет этот порядок - сначала выбирается формат связи, затем начинается диалог.
                 </p>
             </div>
@@ -840,6 +844,31 @@
                 gsap.to(elem, {
                     scrollTrigger: { trigger: elem, start: "top 85%" },
                     y: 0, opacity: 1, duration: 0.8, ease: "power2.out"
+                });
+            });
+
+            // SCROLL REVEAL EFFECT
+            const revealElements = document.querySelectorAll('.text-reveal-scrub');
+            revealElements.forEach(elem => {
+                const text = elem.innerText;
+                elem.innerHTML = '';
+                
+                text.split(' ').forEach(word => {
+                    const span = document.createElement('span');
+                    span.textContent = word + ' ';
+                    span.className = 'word-span';
+                    elem.appendChild(span);
+                });
+
+                gsap.to(elem.querySelectorAll('.word-span'), {
+                    opacity: 1,
+                    stagger: 0.1,
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 80%",   
+                        end: "bottom 50%",  
+                        scrub: true         
+                    }
                 });
             });
 
