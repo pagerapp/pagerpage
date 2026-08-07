@@ -61,7 +61,7 @@
         .glow-card {
             position: relative;
             background-color: #0A0A0A;
-            border-radius: 20px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: transform 0.3s ease;
         }
@@ -104,22 +104,23 @@
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 999px;
             font-weight: 600;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
         .btn-secondary:hover {
             background-color: #111111;
         }
+        .btn-secondary.enhanced-hover {
+            border-color: rgba(255,255,255,0.4);
+        }
 
         /* Image Masks */
+        .mask-right {
+            mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+        }
         .mask-bottom {
             mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
             -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-        }
-
-        /* Scroll Text Reveal (JS Animation) */
-        .word-span {
-            opacity: 0.15;
-            transition: opacity 0.1s ease;
         }
 
         .scroll-container {
@@ -128,7 +129,7 @@
         }
         .scroll-container::-webkit-scrollbar { display: none; }
 
-        /* Storyscroll Styles */
+        /* Storyscroll Styles (Existing Multiprofile) */
         .story-img {
             opacity: 0;
             transform: scale(0.98);
@@ -151,6 +152,100 @@
         }
 
         .reveal-up { opacity: 0; transform: translateY(20px); }
+
+        /* ==================================================
+           HERO-SPECIFIC STYLES
+           ================================================== */
+        .hero-text-stage {
+            position: relative;
+            min-height: 290px; 
+            width: 100%;
+        }
+        @media (min-width: 1024px) {
+            .hero-text-stage { min-height: 260px; }
+        }
+        
+        .hero-copy-item {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        /* Prevent flash on load: initial states */
+        .hero-copy-1,
+        .hero-img-1 {
+            opacity: 1;
+            visibility: visible;
+        }
+        .hero-copy-2,
+        .hero-copy-3,
+        .hero-img-2,
+        .hero-img-3 {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .hero-frame-stack {
+            display: grid;
+            grid-template-areas: 'media-stack';
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            border: 0;
+            background-color: transparent;
+            overflow: hidden;
+            width: min(100%, calc(100vh - 140px));
+            max-width: 800px;
+        }
+        
+        @media (min-width: 768px) and (max-height: 780px) {
+            .hero-frame-stack {
+                width: min(100%, calc(100vh - 110px));
+                max-width: 650px;
+            }
+            .hero-text-stage {
+                min-height: 200px;
+            }
+            .hero-manifest {
+                font-size: clamp(2.75rem, 6vh, 3.75rem);
+            }
+        }
+
+        .hero-frame-stack img {
+            grid-area: media-stack;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Soft merge mask */
+            mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.95) 78%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.95) 78%, transparent 100%);
+        }
+        .hero-media-glow {
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.04);
+        }
+
+        /* Mobile Hero: prevent all frames appearing immediately */
+@media (max-width: 767px) {
+    #hero-linear-wrapper .hero-frame-mobile {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity .6s ease, transform .6s ease;
+    }
+    #hero-linear-wrapper .hero-frame-mobile.reveal-visible {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Reduced motion: mobile keeps the linear layout without reveal animation.
+           Desktop keeps the story-scroll so the Hero behavior is consistent. */
+        @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+            #hero-linear-wrapper .reveal-up {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -172,38 +267,173 @@
         </div>
     </nav>
 
-    <!-- БЛОК: Hero (Full-Bleed, Бесшовный сплит) -->
-    <header class="relative min-h-screen flex items-center overflow-hidden border-b border-white/10 bg-black" id="hero-section">
+    <!-- БЛОК: Hero -->
+    <header id="hero-section" class="border-b border-white/10 bg-black relative">
+        <div class="absolute inset-0 z-0 bg-tech-grid pointer-events-none opacity-50"></div>
         
-        <!-- Фоновая картинка с зашитым сплитом -->
-        <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-            <!-- Страховочный градиент только на самый край, если монитор ультраширокий -->
-            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent w-full md:w-[45%] h-full z-10"></div>
-            <!-- Картинка выровнена по правому краю, её черный фон сливается с bg-black -->
-            <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/hero_block_desktop_background_003.jpg?raw=true" class="w-full h-full object-cover object-right opacity-100" alt="PAGER Vision">
-        </div>
+        <!-- DESKTOP HERO (Sticky 300vh - Static on Reduced Motion) -->
+        <div id="hero-desktop-wrapper" class="hidden md:block h-[300vh] w-full relative z-10">
+            <div class="hero-sticky-stage sticky top-0 h-screen w-full flex items-center overflow-hidden">
+                <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center gap-12 lg:gap-16 pt-16">
+                    
+                    <!-- LEFT COLUMN: Texts & CTAs -->
+                    <div class="w-[42%] lg:w-[46%] relative flex flex-col justify-center">
+                        
+                        <!-- УРОВЕНЬ 1: Надзаголовок -->
+                        <span class="inline-flex items-center bg-white/5 border border-white/10 text-pager px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 self-start">
+                            Новая модель цифрового общения
+                        </span>
 
-        <div class="relative z-20 w-full max-w-7xl mx-auto px-6 pt-24 md:pt-0">
-            <!-- Текст ограничен шириной и расположен ровно в пустоте рендера -->
-            <div class="w-full md:w-[55%] lg:w-[45%] reveal-up">
-                <span class="inline-flex items-center bg-white/5 border border-white/10 text-pager px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-8">
-                    Новая модель цифрового общения
-                </span>
-                
-                <h1 class="text-[3.5rem] sm:text-6xl md:text-[5.5rem] lg:text-[6rem] font-heading font-extrabold mb-6 text-white leading-[0.95] tracking-tighter uppercase">
-                    РАЗНЫЙ.<br>НО ВСЕГДА<br><span class="text-pager">Я!</span>
-                </h1>
-                
-                <p class="text-lg md:text-xl text-zinc-400 mb-10 font-medium leading-relaxed max-w-lg">Новый способ общения, где каждый контакт получает свое представление вас и свои условия взаимодействия.</p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                    <a href="#cta" class="btn-primary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Запросить презентацию</a>
-                    <a href="#demo" class="btn-secondary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Посмотреть, как это работает</a>
+                        <!-- УРОВЕНЬ 2: Постоянный манифест -->
+                        <h1 class="hero-manifest text-[3.25rem] lg:text-[4rem] xl:text-[4.5rem] font-heading font-extrabold text-white leading-[1] tracking-tighter uppercase mb-8">
+                            РАЗНЫЙ.<br>НО ВСЕГДА <span class="text-pager">Я!</span>
+                        </h1>
+
+                        <!-- УРОВЕНЬ 3: Сменяемая расшифровка -->
+                        <div class="hero-text-stage">
+                            <!-- Кадр 1 -->
+                            <div class="hero-copy-item hero-copy-1" aria-hidden="false">
+                                <span class="hero-el-1 text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block">01 / ОДИН ЧЕЛОВЕК</span>
+                                <h2 class="hero-el-1 text-2xl lg:text-3xl font-heading font-bold mb-3 text-white leading-[1.1] tracking-tight">
+                                    Все связи начинаются с меня.
+                                </h2>
+                                <p class="hero-el-1 text-base text-zinc-400 font-medium leading-relaxed max-w-md">
+                                    Личные сообщения, работа, новые контакты, звонки, файлы и голосовые — всё это части одной цифровой жизни.
+                                </p>
+                            </div>
+                            
+                            <!-- Кадр 2 -->
+                            <div class="hero-copy-item hero-copy-2" aria-hidden="true">
+                                <span class="hero-el-2 text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block">02 / МНОГО СТОРОН</span>
+                                <h2 class="hero-el-2 text-2xl lg:text-3xl font-heading font-bold mb-3 text-white leading-[1.1] tracking-tight">
+                                    С каждым я общаюсь по-разному.
+                                </h2>
+                                <p class="hero-el-2 text-base text-zinc-400 font-medium leading-relaxed mb-4 max-w-md">
+                                    С близкими — без формальностей. В работе — по делу. В новых связях — осторожнее.
+                                </p>
+                                <p class="hero-el-2 text-xs font-semibold text-white border-l-2 border-pager pl-3">
+                                    Не разные личности. Разные грани одного человека.
+                                </p>
+                            </div>
+
+                            <!-- Кадр 3 -->
+                            <div class="hero-copy-item hero-copy-3" aria-hidden="true">
+                                <span class="hero-el-3 text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block">03 / СВОИ УСЛОВИЯ</span>
+                                <h2 class="hero-el-3 text-2xl lg:text-3xl font-heading font-bold mb-3 text-white leading-[1.1] tracking-tight">
+                                    Я выбираю, как меня видят.
+                                </h2>
+                                <p class="hero-el-3 text-base text-zinc-400 font-medium leading-relaxed mb-4 max-w-md">
+                                    Профиль, способы общения и уровень доступа определяются для каждой связи отдельно.
+                                </p>
+                                <p class="hero-el-3 text-[10px] lg:text-xs font-bold text-white uppercase tracking-widest mb-4 flex items-center flex-wrap gap-2">
+                                    PAGER ID <span class="text-pager">→</span> Профиль <span class="text-pager">→</span> Правила
+                                </p>
+                                <p class="hero-el-3 text-[10px] font-semibold text-zinc-500 uppercase tracking-widest pt-4 border-t border-white/10 max-w-md">
+                                    Один человек. Много сторон. Свой способ общения для каждого.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CTAs (Активны с самого начала) -->
+                        <div class="hero-cta-anim-wrapper flex flex-col sm:flex-row gap-4 mt-2">
+                            <a href="#cta" class="btn-primary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Запросить презентацию</a>
+                            <a href="#demo" id="hero-btn-secondary" class="btn-secondary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Посмотреть, как это работает</a>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Media -->
+                    <div class="w-[50%] lg:w-[54%] flex justify-end items-center">
+                        <div class="hero-frame-stack hero-media-glow relative">
+                            <!-- Image 1 -->
+                            <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/5d3ab8ad-bbef-46ff-8cb7-04d426861a63.png?raw=true" alt="Человек в центре разных типов цифрового общения" class="hero-img hero-img-1" aria-hidden="false">
+                            <!-- Image 2 -->
+                            <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/93842b8f-e896-456f-a595-2443b3791ced.png?raw=true" alt="Личное, рабочее и контекстное общение одного человека" class="hero-img hero-img-2" aria-hidden="true">
+                            <!-- Image 3 -->
+                            <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/4c56a7b5-f3c6-4fa2-a3d8-d9f11231029b.png?raw=true" alt="Выбор профиля, разрешений и уровня доступа в PAGER" class="hero-img hero-img-3" aria-hidden="true">
+                        </div>
+                    </div>
+                    
                 </div>
-
-                <p class="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest pt-6 border-t border-white/10">Один человек. Много сторон. Свой способ общения для каждого.</p>
             </div>
         </div>
+
+        <!-- LINEAR WRAPPER (Mobile) -->
+        <div id="hero-linear-wrapper" class="flex md:hidden flex-col px-6 pt-32 pb-24 gap-20 relative z-10 max-w-7xl mx-auto w-full">
+            
+            <!-- Заголовочная секция -->
+            <div class="flex flex-col gap-4 reveal-up">
+                <span class="inline-flex items-center bg-white/5 border border-white/10 text-pager px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest self-start mb-2">
+                    Новая модель цифрового общения
+                </span>
+                <h1 class="text-4xl sm:text-5xl md:text-[4rem] font-heading font-extrabold text-white leading-[1] tracking-tighter uppercase">
+                    РАЗНЫЙ.<br>НО ВСЕГДА <span class="text-pager">Я!</span>
+                </h1>
+            </div>
+
+            <!-- Кадр 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center reveal-up">
+                <div class="order-1 md:order-1 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block">01 / ОДИН ЧЕЛОВЕК</span>
+                    <h2 class="text-2xl sm:text-3xl font-heading font-bold mb-4 text-white leading-[1.1] tracking-tight">
+                        Все связи начинаются с меня.
+                    </h2>
+                    <p class="text-sm md:text-base text-zinc-400 font-medium leading-relaxed max-w-md">
+                        Личные сообщения, работа, новые контакты, звонки, файлы и голосовые — всё это части одной цифровой жизни.
+                    </p>
+                </div>
+                <div class="order-2 md:order-2 w-full aspect-square rounded-[12px] overflow-hidden bg-black hero-media-glow border border-white/5 hero-frame-mobile">
+                    <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/5d3ab8ad-bbef-46ff-8cb7-04d426861a63.png?raw=true" class="w-full h-full object-cover" alt="Человек в центре разных типов цифрового общения">
+                </div>
+            </div>
+
+            <!-- Кадр 2 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center reveal-up">
+                <div class="order-1 md:order-1 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block">02 / МНОГО СТОРОН</span>
+                    <h2 class="text-2xl sm:text-3xl font-heading font-bold mb-4 text-white leading-[1.1] tracking-tight">
+                        С каждым я общаюсь по-разному.
+                    </h2>
+                    <p class="text-sm md:text-base text-zinc-400 font-medium leading-relaxed mb-4 max-w-md">
+                        С близкими — без формальностей. В работе — по делу. В новых связях — осторожнее.
+                    </p>
+                    <p class="text-xs font-semibold text-white border-l-2 border-pager pl-3">
+                        Не разные личности. Разные грани одного человека.
+                    </p>
+                </div>
+                <div class="order-2 md:order-2 w-full aspect-square rounded-[12px] overflow-hidden bg-black hero-media-glow border border-white/5 hero-frame-mobile">
+                    <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/93842b8f-e896-456f-a595-2443b3791ced.png?raw=true" class="w-full h-full object-cover" alt="Личное, рабочее и контекстное общение одного человека">
+                </div>
+            </div>
+
+            <!-- Кадр 3 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center reveal-up">
+                <div class="order-1 md:order-1 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block">03 / СВОИ УСЛОВИЯ</span>
+                    <h2 class="text-2xl sm:text-3xl font-heading font-bold mb-4 text-white leading-[1.1] tracking-tight">
+                        Я выбираю, как меня видят.
+                    </h2>
+                    <p class="text-sm md:text-base text-zinc-400 font-medium leading-relaxed mb-6 max-w-md">
+                        Профиль, способы общения и уровень доступа определяются для каждой связи отдельно.
+                    </p>
+                    <p class="text-[10px] font-bold text-white uppercase tracking-widest mb-6 flex items-center flex-wrap gap-2">
+                        PAGER ID <span class="text-pager">→</span> Профиль <span class="text-pager">→</span> Правила
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                        <a href="#cta" class="btn-primary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Запросить презентацию</a>
+                        <a href="#demo" class="btn-secondary px-8 py-3.5 uppercase tracking-widest text-center text-xs">Посмотреть, как это работает</a>
+                    </div>
+                    
+                    <p class="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest pt-4 border-t border-white/10 max-w-md">
+                        Один человек. Много сторон. Свой способ общения для каждого.
+                    </p>
+                </div>
+                <div class="order-2 md:order-2 w-full aspect-square rounded-[12px] overflow-hidden bg-black hero-media-glow border border-white/5 hero-frame-mobile">
+                    <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/4c56a7b5-f3c6-4fa2-a3d8-d9f11231029b.png?raw=true" class="w-full h-full object-cover" alt="Выбор профиля, разрешений и уровня доступа в PAGER">
+                </div>
+            </div>
+        </div>
+
     </header>
 
     <!-- БЛОК: Инфо-панель -->
@@ -368,7 +598,7 @@
             
             <div class="flex justify-center reveal-up">
                 <div class="relative w-full max-w-md">
-                    <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_3/pager_id_variation_002.jpg?raw=true" alt="PAGER ID" class="w-full h-auto rounded-2xl border border-white/10">
+                    <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_3/pager_id_variation_002.jpg?raw=true" alt="PAGER ID" class="w-full h-auto rounded-[12px] border border-white/10">
                 </div>
             </div>
         </div>
@@ -385,10 +615,10 @@
 
         <div class="hidden md:flex relative w-full lg:flex-row h-[400vh]" id="story-container-desktop">
             <div class="w-1/2 sticky top-0 h-screen overflow-hidden z-0 flex items-center justify-center border-r border-white/10 bg-[#050505]">
-                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/Multiprofiles_mobile_img_1.png?raw=true" class="story-img active mask-bottom" id="img-story-1" alt="Проблема">
-                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/Multiprofiles_mobile_img_2.png?raw=true" class="story-img mask-bottom" id="img-story-2" alt="Осознание">
-                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/Multiprofiles_mobile_img_3.png?raw=true" class="story-img mask-bottom" id="img-story-3" alt="Решение">
-                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/Multiprofiles_mobile_img_4.png?raw=true" class="story-img mask-bottom" id="img-story-4" alt="Масштаб">
+                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_1.png?raw=true" class="story-img active mask-bottom" id="img-story-1" alt="Проблема">
+                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_2.png?raw=true" class="story-img mask-bottom" id="img-story-2" alt="Осознание">
+                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_3.png?raw=true" class="story-img mask-bottom" id="img-story-3" alt="Решение">
+                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_4.png?raw=true" class="story-img mask-bottom" id="img-story-4" alt="Масштаб">
             </div>
 
             <div class="w-1/2 relative z-10">
@@ -436,7 +666,7 @@
 
         <div class="md:hidden flex flex-col px-6 pb-20 space-y-6">
             <div class="glow-card p-6 reveal-up">
-                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/Multiprofiles_mobile_img_1.png?raw=true" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Проблема">
+                <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_1.png?raw=true" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Проблема">
                 <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Проблема</span>
                 <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">Одно цифровое представление для всех отношений</h3>
                 <p class="text-zinc-400 text-sm leading-relaxed">Работа, семья, друзья и новые знакомства видят одну и ту же версию вас.</p>
@@ -446,6 +676,25 @@
                 <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">Цифровой профиль не отражает всего человека.</h3>
                 <p class="text-zinc-400 text-sm leading-relaxed mb-4">В реальной жизни мы разные: в семье; в работе; с друзьями; с незнакомыми людьми.</p>
                 <p class="text-white font-semibold text-sm border-l-2 border-pager pl-4">Это не разные личности. Это разные грани одного человека.</p>
+            </div>
+            <div class="glow-card p-6 reveal-up">
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Решение</span>
+                <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">PAGER создает разные пространства общения</h3>
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">Создайте разные пространства общения внутри одного аккаунта. Каждое пространство может иметь:</p>
+                <ul class="space-y-2 text-white text-sm font-medium">
+                    <li>— свое представление;</li>
+                    <li>— свои правила;</li>
+                    <li>— свой уровень доступности.</li>
+                </ul>
+            </div>
+            <div class="glow-card border-pager/30 bg-[#050505] p-6 reveal-up">
+                <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-2 block">Масштаб</span>
+                <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">Один человек. Несколько способов быть собой.</h3>
+                <p class="text-zinc-400 text-sm leading-relaxed mb-6">Ваши профили работают вместе, сохраняя единый аккаунт и полный контроль над каждой связью.</p>
+                <p class="text-base text-white font-bold mb-4">Разный. Но всегда я!</p>
+                <div class="pt-4 border-t border-white/10">
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Мессенджеры управляют сообщениями. PAGER управляет тем, как человек присутствует в цифровом мире.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -462,14 +711,14 @@
         <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 pb-12 pr-[15vw] md:pr-[20vw] scroll-container px-6 max-w-7xl mx-auto">
             
             <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up">
-                <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
+                <div class="h-48 relative w-full rounded-[12px] overflow-hidden mb-5 bg-[#050505]">
                     <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_1x.png?raw=true" alt="Личное" class="w-full h-full object-cover object-top mask-bottom">
                 </div>
                 <div class="mb-6">
                     <h3 class="font-heading text-2xl font-bold text-white mb-1">Личное</h3>
                     <p class="text-[11px] text-zinc-400 font-medium h-8">Для тех, с кем можно быть без формальностей.</p>
                 </div>
-                <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto">
+                <div class="bg-[#050505] border border-white/5 p-5 rounded-[12px] mt-auto">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
@@ -496,14 +745,14 @@
             </div>
 
             <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up" style="transition-delay: 0.1s;">
-                <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
+                <div class="h-48 relative w-full rounded-[12px] overflow-hidden mb-5 bg-[#050505]">
                     <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_3x.png?raw=true" alt="Работа" class="w-full h-full object-cover object-top mask-bottom">
                 </div>
                 <div class="mb-6">
                     <h3 class="font-heading text-2xl font-bold text-white mb-1">Работа</h3>
                     <p class="text-[11px] text-zinc-400 font-medium h-8">Для профессиональных связей.</p>
                 </div>
-                <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto">
+                <div class="bg-[#050505] border border-white/5 p-5 rounded-[12px] mt-auto">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
@@ -530,14 +779,14 @@
             </div>
 
             <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up" style="transition-delay: 0.2s;">
-                <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
+                <div class="h-48 relative w-full rounded-[12px] overflow-hidden mb-5 bg-[#050505]">
                     <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_2x.png?raw=true" alt="Гостевое" class="w-full h-full object-cover object-top mask-bottom grayscale">
                 </div>
                 <div class="mb-6">
                     <h3 class="font-heading text-2xl font-bold text-white mb-1">Гостевое</h3>
                     <p class="text-[11px] text-zinc-400 font-medium h-8">Для новых или временных контактов.</p>
                 </div>
-                <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto relative">
+                <div class="bg-[#050505] border border-white/5 p-5 rounded-[12px] mt-auto relative">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
@@ -565,14 +814,14 @@
             </div>
 
             <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up" style="transition-delay: 0.3s;">
-                <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
+                <div class="h-48 relative w-full rounded-[12px] overflow-hidden mb-5 bg-[#050505]">
                     <img src="https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_4x.png?raw=true" alt="Особый" class="w-full h-full object-cover object-top mask-bottom">
                 </div>
                 <div class="mb-6">
                     <h3 class="font-heading text-2xl font-bold text-white mb-1">Особый контекст</h3>
                     <p class="text-[11px] text-zinc-400 font-medium h-8">Для любых других сценариев общения.</p>
                 </div>
-                <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto">
+                <div class="bg-[#050505] border border-white/5 p-5 rounded-[12px] mt-auto">
                     <div class="mb-4">
                         <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-2">Например:</p>
                         <ul class="text-xs text-white space-y-1">
@@ -662,14 +911,14 @@
 
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="text-center max-w-4xl mx-auto mb-20 reveal-up">
-                <span class="badge mb-6">человек → условия связи → сообщение</span>
-                <h2 class="text-reveal-scrub font-heading text-4xl md:text-6xl mb-6 text-white tracking-tighter font-bold">
+                <span class="badge mb-6 inline-block bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">человек → условия связи → сообщение</span>
+                <h2 class="font-heading text-4xl md:text-6xl mb-6 text-white tracking-tighter font-bold">
                     Правила видны до начала разговора.
                 </h2>
-                <p class="text-reveal-scrub text-lg text-zinc-400 font-medium leading-relaxed mb-4">
+                <p class="text-lg text-zinc-400 font-medium leading-relaxed mb-4">
                     Сегодня цифровое общение начинается с доступа: человек получает возможность написать или позвонить, а правила взаимодействия формируются уже после или вообще отсутствуют.
                 </p>
-                <p class="text-reveal-scrub text-lg text-white font-bold leading-relaxed">
+                <p class="text-lg text-white font-bold leading-relaxed">
                     PAGER меняет этот порядок - сначала выбирается формат связи, затем начинается диалог.
                 </p>
             </div>
@@ -847,31 +1096,110 @@
                 });
             });
 
-            // SCROLL REVEAL EFFECT
-            const revealElements = document.querySelectorAll('.text-reveal-scrub');
-            revealElements.forEach(elem => {
-                const text = elem.innerText;
-                elem.innerHTML = '';
-                
-                text.split(' ').forEach(word => {
-                    const span = document.createElement('span');
-                    span.textContent = word + ' ';
-                    span.className = 'word-span';
-                    elem.appendChild(span);
-                });
+            // ==================================================
+            // HERO STORY-SCROLL LOGIC
+            // ==================================================
+            let heroMm = gsap.matchMedia();
 
-                gsap.to(elem.querySelectorAll('.word-span'), {
-                    opacity: 1,
-                    stagger: 0.1,
-                    scrollTrigger: {
-                        trigger: elem,
-                        start: "top 80%",   
-                        end: "bottom 50%",  
-                        scrub: true         
-                    }
-                });
+            heroMm.add("(min-width: 768px)", () => {
+                let currentHeroIndex = 0;
+                
+                function setHeroAccessibility(activeIndex) {
+                    const copies = document.querySelectorAll('.hero-copy-item');
+                    const images = document.querySelectorAll('.hero-img');
+
+                    copies.forEach((item, index) => {
+                        item.setAttribute('aria-hidden', index === activeIndex ? 'false' : 'true');
+                    });
+                    images.forEach((item, index) => {
+                        item.setAttribute('aria-hidden', index === activeIndex ? 'false' : 'true');
+                    });
+                }
+                
+                function updateHeroAccessibility(index) {
+                    if (index === currentHeroIndex) return;
+                    currentHeroIndex = index;
+                    setHeroAccessibility(index);
+                }
+
+                const ctx = gsap.context(() => {
+                    // Explicit initial states make the timeline reliable after resize/refresh.
+                    gsap.set('.hero-copy-1, .hero-img-1', { autoAlpha: 1 });
+                    gsap.set('.hero-copy-2, .hero-copy-3', { autoAlpha: 0 });
+                    gsap.set('.hero-img-2, .hero-img-3', { autoAlpha: 0, scale: 0.975, filter: 'brightness(0.85)' });
+                    gsap.set('.hero-el-2, .hero-el-3', { y: 20, autoAlpha: 0 });
+                    gsap.set('.hero-cta-anim-wrapper', { y: 0, scale: 1 });
+                    setHeroAccessibility(0);
+
+                    const heroTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: "#hero-desktop-wrapper",
+                            start: "top top",
+                            end: "bottom bottom",
+                            scrub: true,
+                            invalidateOnRefresh: true,
+                            onUpdate: self => {
+                                let index = 0;
+                                if (self.progress >= 0.66) {
+                                    index = 2;
+                                } else if (self.progress >= 0.33) {
+                                    index = 1;
+                                }
+                                updateHeroAccessibility(index);
+                            }
+                        }
+                    });
+
+                    heroTl
+                      .to({}, { duration: 0.3 }) 
+                      
+                      .to('.hero-el-1', { autoAlpha: 0, y: -16, duration: 0.4, stagger: 0.05 }, "trans1")
+                      .to('.hero-img-1', { autoAlpha: 0, scale: 1.02, filter: 'brightness(0.85)', duration: 0.5 }, "trans1")
+                      
+                      .to('.hero-copy-2', { autoAlpha: 1, duration: 0.1 }, "trans1+=0.2") 
+                      .to('.hero-img-2', { autoAlpha: 1, scale: 1, filter: 'brightness(1)', duration: 0.5 }, "trans1+=0.2")
+                      .to('.hero-el-2', { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.05 }, "trans1+=0.3")
+
+                      .to({}, { duration: 0.3 })
+
+                      .to('.hero-el-2', { autoAlpha: 0, y: -16, duration: 0.4, stagger: 0.05 }, "trans2")
+                      .to('.hero-img-2', { autoAlpha: 0, scale: 1.02, filter: 'brightness(0.85)', duration: 0.5 }, "trans2")
+                      
+                      .to('.hero-copy-3', { autoAlpha: 1, duration: 0.1 }, "trans2+=0.2") 
+                      .to('.hero-img-3', { autoAlpha: 1, scale: 1, filter: 'brightness(1)', duration: 0.5 }, "trans2+=0.2")
+                      .to('.hero-el-3', { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.05 }, "trans2+=0.3")
+                      
+                      .to('.hero-cta-anim-wrapper', { y: -8, scale: 1, duration: 0.4 }, "trans2+=0.4")
+                      .to('#hero-btn-secondary', { borderColor: 'rgba(255,255,255,0.4)', duration: 0.4 }, "trans2+=0.4")
+
+                      .to({}, { duration: 0.3 });
+                }, "#hero-section");
+                  
+                return () => {
+                   ctx.revert();
+                   currentHeroIndex = -1;
+                };
             });
 
+            // Mobile hero progressive reveal
+            if (window.innerWidth < 768) {
+                const mobileHeroFrames = document.querySelectorAll('.hero-frame-mobile');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) entry.target.classList.add('reveal-visible');
+                    });
+                }, { threshold: 0.2 });
+                mobileHeroFrames.forEach(frame => observer.observe(frame));
+            }
+
+            // Refresh ScrollTrigger to ensure calculations are correct after initial rendering
+            window.addEventListener('load', () => {
+                ScrollTrigger.refresh();
+            });
+
+            // ==================================================
+            // EXISTING DEMO STORY-SCROLL LOGIC
+            // ==================================================
             if(window.innerWidth >= 768) {
                 const steps = document.querySelectorAll('.story-step');
                 const storyImages = document.querySelectorAll('.story-img');
