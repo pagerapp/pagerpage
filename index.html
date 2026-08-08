@@ -1,1178 +1,1547 @@
-<!-- Preload critical Hero Image -->
-<link rel="preload" href="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/5d3ab8ad-bbef-46ff-8cb7-04d426861a63.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/5d3ab8ad-bbef-46ff-8cb7-04d426861a63.png?raw=true)" as="image" fetchpriority="high">
-
-<script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-<script src="[https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js](https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js)"></script>
-<script src="[https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js](https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js)"></script>
-<script src="[https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js](https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js)"></script>
-
-<script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    black: '#000000',
-                    surface: '#0A0A0A',
-                    pager: '#2F9CFF',
-                    access: '#10B981',
-                    time: '#F59E0B'
-                },
-                fontFamily: {
-                    heading: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    sans: ['Inter', 'sans-serif']
-                }
-            }
-        }
-    }
-</script>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAGER — Controlled Reachability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-    @import url('[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap)');
-    
-    body {
-        background-color: #000000;
-        color: #FAFAFA;
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
+  :root{
+    --bg: #0A0C0F;
+    --surface: #14171C;
+    --surface-2: #1B1F25;
+    --line: rgba(242,243,244,0.09);
+    --line-strong: rgba(242,243,244,0.16);
+    --text: #F2F3F4;
+    --text-dim: #8B929C;
+    --text-faint: #565C64;
+
+    --personal: #20C997;
+    --work: #38BDF8;
+    --guest: #D4C4B7;
+    --alter: #FFCE7A;
+
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --radius-l: 14px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .mono{
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  a{ color: inherit; }
+
+  .wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---------- NAV ---------- */
+
+  .nav{
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index: 50;
+    padding: 22px 32px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    background: linear-gradient(
+      to bottom,
+      rgba(10,12,15,0.9),
+      rgba(10,12,15,0)
+    );
+    pointer-events: none;
+  }
+
+  .nav-mark{
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.14em;
+    pointer-events: auto;
+  }
+
+  .nav-id{
+    font-size: 12px;
+    color: var(--text-faint);
+    pointer-events: auto;
+  }
+
+  /* ---------- HERO ---------- */
+
+  .hero{
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 140px 32px 80px;
+    position: relative;
+  }
+
+  .eyebrow{
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-faint);
+    margin-bottom: 22px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.1s;
+  }
+
+  h1.headline{
+    font-size: clamp(30px, 5.6vw, 64px);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+    margin: 0 0 22px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.2s;
+  }
+
+  h1.headline .dim{
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .subhead{
+    font-size: clamp(15px, 1.6vw, 18px);
+    color: var(--text-dim);
+    max-width: 560px;
+    line-height: 1.55;
+    margin: 0 0 56px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.32s;
+  }
+
+  @keyframes fadeUp{
+    from{
+      opacity:0;
+      transform: translateY(14px);
+    }
+    to{
+      opacity:1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ---------- STAGE ---------- */
+
+  .stage{
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    height: 560px;
+    margin: 0 auto;
+    perspective: 1400px;
+  }
+
+  .hero .stage{
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.45s;
+  }
+
+  .deck{
+    position:absolute;
+    inset:0;
+    transform-style: preserve-3d;
+  }
+
+  .id-card{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 260px;
+    height: 400px;
+    margin: -200px 0 0 -130px;
+    border-radius: var(--radius-l);
+    border: 1px solid var(--line-strong);
+    background: linear-gradient(
+      155deg,
+      var(--surface-2),
+      var(--surface) 70%
+    );
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+    transition:
+      transform 0.6s cubic-bezier(.22,.9,.28,1),
+      opacity 0.5s ease,
+      filter 0.5s ease;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 22px;
+  }
+
+  .id-card .avatar{
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-s);
+    background: var(--card-color, var(--personal));
+  }
+
+  .id-card .card-name{
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+
+  .id-card .card-desc{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .id-card .card-id{
+    font-size: 11px;
+    color: var(--text-faint);
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+
+  .id-card .card-id b{
+    color: var(--card-color, var(--text-dim));
+    font-weight: 500;
+  }
+
+  .id-card .tag{
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--card-color, var(--text-dim));
+    font-weight: 600;
+  }
+
+  .id-card[data-pos="0"]{
+    transform: translate3d(0,0,0) rotateY(0deg) scale(1);
+    opacity:1;
+    z-index:5;
+    filter: none;
+  }
+
+  .id-card[data-pos="1"]{
+    transform: translate3d(46px,26px,-90px)
+               rotateY(-8deg)
+               scale(0.93);
+    opacity:0.55;
+    z-index:4;
+    filter: blur(0.4px) brightness(0.75);
+  }
+
+  .id-card[data-pos="2"]{
+    transform: translate3d(86px,50px,-180px)
+               rotateY(-13deg)
+               scale(0.86);
+    opacity:0.32;
+    z-index:3;
+    filter: blur(0.8px) brightness(0.6);
+  }
+
+  .id-card[data-pos="3"]{
+    transform: translate3d(120px,72px,-270px)
+               rotateY(-17deg)
+               scale(0.8);
+    opacity:0.16;
+    z-index:2;
+    filter: blur(1.2px) brightness(0.5);
+  }
+
+  .phone{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width: 232px;
+    height: 470px;
+    margin: -235px 0 0 -116px;
+    border-radius: 30px;
+    border: 1px solid var(--line-strong);
+    background: #0D1013;
+    box-shadow: 0 40px 80px -24px rgba(0,0,0,0.75);
+    z-index: 10;
+    padding: 14px;
+    transform: translate3d(-70px,-10px,60px);
+  }
+
+  .phone-screen{
+    height:100%;
+    border-radius: 20px;
+    background: var(--surface);
+    padding: 20px 16px;
+    display:flex;
+    flex-direction: column;
+  }
+
+  .phone-topline{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-bottom: 22px;
+  }
+
+  .phone-avatar{
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-s);
+    background: var(--phone-color, var(--personal));
+    transition: background 0.4s ease;
+    margin-bottom: 14px;
+  }
+
+  .phone-name{
+    font-size: 18px;
+    font-weight: 700;
+    transition: opacity 0.25s ease;
+  }
+
+  .phone-tag{
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--phone-color, var(--personal));
+    margin-bottom: 6px;
+    transition: color 0.4s ease;
+  }
+
+  .phone-desc{
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+
+  .phone-meta{
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .phone-audience{
+    display:flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+
+  .phone-audience b{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .perm-row{
+    display:flex;
+    gap: 6px;
+  }
+
+  .perm{
+    flex:1;
+    height: 26px;
+    border-radius: var(--radius-s);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    transition: all 0.3s ease;
+  }
+
+  .perm.on{
+    background: color-mix(
+      in srgb,
+      var(--phone-color, var(--personal)) 16%,
+      var(--surface-2)
+    );
+
+    border-color: color-mix(
+      in srgb,
+      var(--phone-color, var(--personal)) 50%,
+      var(--line)
+    );
+
+    color: var(--text);
+  }
+
+  .scroll-cue{
+    margin-top: 46px;
+    font-size: 11px;
+    color: var(--text-faint);
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    gap:8px;
+    opacity:0;
+    animation: fadeUp 0.9s ease forwards 0.7s;
+  }
+
+  .scroll-cue .line{
+    width:1px;
+    height:28px;
+    background: linear-gradient(
+      var(--text-faint),
+      transparent
+    );
+    animation: pulseLine 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulseLine{
+    0%,100%{ opacity:0.3 }
+    50%{ opacity:1 }
+  }
+
+  /* ---------- PROBLEM ---------- */
+
+  .problem{
+    padding: 140px 32px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .problem-inner{
+    max-width: 720px;
+    text-align:center;
+  }
+
+  .problem-label{
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-faint);
+    margin-bottom: 20px;
+  }
+
+  .problem h2{
+    font-size: clamp(24px, 3.4vw, 36px);
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0 0 40px;
+    color: var(--text-dim);
+  }
+
+  .flat-card{
+    max-width: 320px;
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    padding: 22px;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+
+  .flat-card .avatar{
+    width:40px;
+    height:40px;
+    border-radius: var(--radius-s);
+    background: var(--text-faint);
+    flex-shrink:0;
+  }
+
+  .flat-card .fc-title{
+    font-size:14px;
+    font-weight:600;
+  }
+
+  .flat-card .fc-sub{
+    font-size:12px;
+    color:var(--text-faint);
+    margin-top:2px;
+  }
+
+  /* ---------- MULTIPROFILE ---------- */
+
+  .multiprofile{
+    position: relative;
+    height: 420vh;
+  }
+
+  .mp-sticky{
+    position: sticky;
+    top:0;
+    height: 100vh;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .mp-heading{
+    text-align:center;
+    max-width: 620px;
+    margin: 0 auto 8px;
+    padding: 0 32px;
+  }
+
+  .mp-heading .eyebrow{
+    animation:none;
+    opacity:1;
+  }
+
+  .mp-heading h2{
+    font-size: clamp(24px, 3.6vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+  }
+
+  .mp-heading p{
+    font-size: 14.5px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin:0;
+  }
+
+  .mp-body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 70px;
+    margin-top: 34px;
+    width:100%;
+  }
+
+  .mp-labels{
+    display:flex;
+    flex-direction:column;
+    gap: 18px;
+  }
+
+  .mp-label{
+    font-size: 13px;
+    color: var(--text-faint);
+    font-weight: 600;
+    padding-left: 16px;
+    border-left: 2px solid var(--line);
+    transition: all 0.35s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .mp-label small{
+    display:block;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+
+  .mp-label.active{
+    color: var(--text);
+    border-left-color: var(--active-color, var(--personal));
+  }
+
+  .mp-progress{
+    width: 200px;
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    margin-top: 30px;
+    overflow:hidden;
+  }
+
+  .mp-progress-fill{
+    height:100%;
+    width: 25%;
+    background: var(--active-color, var(--personal));
+    transition: width 0.3s ease, background 0.4s ease;
+  }
+
+  /* ---------- WHY ---------- */
+
+  .why{
+    padding: 150px 32px;
+  }
+
+  .why-inner{
+    max-width: 900px;
+    margin:0 auto;
+  }
+
+  .why-head{
+    font-size: clamp(22px,3vw,32px);
+    font-weight:700;
+    max-width: 560px;
+    margin-bottom: 60px;
+    letter-spacing: -0.01em;
+  }
+
+  .why-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow:hidden;
+  }
+
+  .why-item{
+    background: var(--bg);
+    padding: 30px 26px;
+  }
+
+  .why-item .wi-label{
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+  }
+
+  .why-item p{
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin:0;
+  }
+
+  /* ---------- CTA ---------- */
+
+  .cta{
+    padding: 160px 32px 100px;
+    text-align:center;
+  }
+
+  .cta h2{
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 700;
+    max-width: 640px;
+    margin: 0 auto 34px;
+    letter-spacing: -0.01em;
+  }
+
+  .cta-actions{
+    display:flex;
+    gap: 14px;
+    justify-content:center;
+    flex-wrap: wrap;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    padding: 14px 26px;
+    border-radius: var(--radius-s);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration:none;
+    border: 1px solid var(--line-strong);
+    transition: all 0.25s ease;
+  }
+
+  .btn-primary{
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .btn-primary:hover{
+    opacity: 0.85;
+  }
+
+  .btn-ghost{
+    color: var(--text-dim);
+  }
+
+  .btn-ghost:hover{
+    color: var(--text);
+    border-color: var(--text-dim);
+  }
+
+  .foot{
+    text-align:center;
+    padding: 40px 32px 60px;
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  @media (max-width: 860px){
+    .mp-body{
+      flex-direction: column;
+      gap: 30px;
     }
 
-    /* Lenis Smooth Scroll Setup */
-    html.lenis { height: auto; }
-    .lenis.lenis-smooth { scroll-behavior: auto; }
-    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-    .lenis.lenis-stopped { overflow: hidden; }
-
-    /* Background Grid */
-    .bg-tech-grid {
-        background-size: 30px 30px;
-        background-image: 
-            linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    .mp-labels{
+      flex-direction: row;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap: 10px 16px;
     }
 
-    /* Glow Cards (Premium Vercel feel) */
-    .glow-card {
-        position: relative;
-        background-color: #0A0A0A;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: transform 0.3s ease;
-    }
-    .glow-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        border-radius: inherit;
-        padding: 1px;
-        background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 50%);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-    }
-    .glow-card:hover { transform: translateY(-2px); }
-    .glow-card:hover::before { opacity: 1; }
-
-    /* Buttons */
-    .btn-primary {
-        background-color: #FFFFFF;
-        color: #000000;
-        border-radius: 999px;
-        font-weight: 600;
-        transition: background-color 0.2s ease, transform 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .btn-primary:hover { background-color: #D4D4D8; }
-
-    .btn-secondary {
-        background-color: #000000;
-        color: #FFFFFF;
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 999px;
-        font-weight: 600;
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .btn-secondary:hover { background-color: #111111; }
-
-    /* Image Masks */
-    .mask-bottom {
-        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
-        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+    .mp-label{
+      border-left:none;
+      border-bottom: 2px solid var(--line);
+      padding-left:0;
+      padding-bottom: 4px;
     }
 
-    .scroll-container {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-    .scroll-container::-webkit-scrollbar { display: none; }
-
-    /* Marquee Animation */
-    .marquee-track {
-        display: inline-flex;
-        animation: marquee 30s linear infinite;
-        will-change: transform;
-    }
-    @keyframes marquee {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
+    .mp-label.active{
+      border-bottom-color:
+        var(--active-color, var(--personal));
     }
 
-    /* Multiprofile Storyscroll */
-    .story-img {
-        opacity: 0;
-        transform: scale(0.98);
-        transition: opacity 0.4s ease, transform 0.6s ease;
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        object-fit: contain;
-        padding: 2rem;
-    }
-    .story-img.active { opacity: 1; transform: scale(1); }
-    .story-step-content { opacity: 0.2; transition: opacity 0.4s ease; }
-    .story-step.is-active .story-step-content { opacity: 1; }
-
-    /* GSAP States */
-    .reveal-up { opacity: 0; transform: translateY(20px); }
-    
-    .hero-media-glow { box-shadow: 0 0 60px rgba(255, 255, 255, 0.05); }
-
-    .hero-img-mask {
-        mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.95) 78%, transparent 100%);
-        -webkit-mask-image: radial-gradient(ellipse at center, #000 64%, rgba(0,0,0,0.95) 78%, transparent 100%);
+    .why-grid{
+      grid-template-columns: 1fr;
     }
 
-    .story-text-state {
-        position: absolute;
-        width: 100%;
-        pointer-events: none;
+    .stage{
+      transform: scale(0.85);
     }
-    
-    .hero-img-state {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        opacity: 0;
-        transform: scale(0.97);
-        will-change: transform, opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
 
-    .k-word {
-        display: inline-block;
-        will-change: transform, opacity, filter;
+    html{
+      scroll-behavior:auto;
     }
-
-    /* Accessibility: Reduced Motion */
-    @media (prefers-reduced-motion: reduce) {
-        .hero-img-state, .story-text-state, .k-word, .reveal-up {
-            opacity: 1 !important;
-            transform: none !important;
-            filter: none !important;
-        }
-        #hero-story, #story-container-desktop { height: auto !important; }
-        .sticky { position: relative !important; }
-        .marquee-track { animation: none !important; }
-    }
+  }
 </style>
+</head>
 
-<!-- Навигация -->
-<nav id="smart-header" class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 transition-transform duration-300">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/pager_logo.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/pager_logo.png?raw=true)" alt="PAGER" class="h-6 w-6 object-contain">
-            <span class="font-heading font-bold text-xl tracking-tight text-white mt-0.5">PAGER</span>
-            <span class="text-[10px] text-zinc-500 uppercase tracking-widest hidden sm:inline ml-4 pl-4 border-l border-white/10">Private communication / 2026</span>
-        </div>
-        <div class="hidden md:flex space-x-8 text-xs font-semibold uppercase tracking-widest text-zinc-400">
-            <a href="#product" class="hover:text-white transition-colors">Продукт</a>
-            <a href="#demo" class="hover:text-white transition-colors">Демо</a>
-            <a href="#status" class="hover:text-white transition-colors">Статус</a>
-            <a href="#business" class="hover:text-white transition-colors">Бизнес</a>
-        </div>
-    </div>
+<body>
+
+<nav class="nav">
+  <div class="nav-mark">PAGER</div>
+  <div class="nav-id mono">A147&nbsp;0865</div>
 </nav>
 
-<!-- БЛОК: Hero (Flexbox Layout + GSAP) -->
-<section id="hero-story" class="relative w-full border-b border-white/10 bg-black" style="height: 380vh;">
-    <div class="absolute inset-0 z-0 bg-tech-grid pointer-events-none opacity-50"></div>
-    
-    <!-- Sticky Container using Flexbox to guarantee NO overlaps -->
-    <div class="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden z-10 pt-20 pb-8 px-6">
-        
-        <!-- TOP: Manifesto -->
-        <div class="shrink-0 flex flex-col items-center text-center z-30 w-full mt-2 md:mt-4">
-            <span id="manifesto-sup" class="inline-flex items-center bg-white/5 border border-white/10 text-pager px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 md:mb-6 opacity-0">
-                Новая модель цифрового общения
-            </span>
-            <h1 class="text-[2.5rem] sm:text-[3.5rem] md:text-[4rem] xl:text-[4.5rem] font-heading font-extrabold text-white leading-[1] tracking-tighter uppercase mb-4 flex flex-col items-center">
-                <div class="overflow-hidden pb-1"><span class="m-line block transform translate-y-full">РАЗНЫЙ.</span></div>
-                <div class="overflow-hidden pb-1"><span class="m-line block transform translate-y-full text-zinc-600">НО ВСЕГДА <span class="text-pager">Я!</span></span></div>
-            </h1>
-            <p id="hero-subtitle" class="text-xs sm:text-sm text-zinc-400 font-medium max-w-md mx-auto leading-relaxed">
-                Новый способ общения, где каждый контакт получает свое представление вас и свои условия взаимодействия.
-            </p>
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="eyebrow">
+    A PRIVATE ACCESS LAYER FOR COMMUNICATION
+  </div>
+
+  <h1 class="headline">
+    Messaging apps made us reachable<br class="brk">
+    by anyone.
+    <span class="dim">
+      We let you decide who gets through.
+    </span>
+  </h1>
+
+  <p class="subhead">
+    PAGER replaces your phone number with an ID,
+    your inbox with requests, and your one profile
+    with as many contextual identities as your
+    relationships need.
+  </p>
+
+  <div class="stage" id="heroStage">
+
+    <div class="deck">
+
+      <div
+        class="id-card"
+        data-pos="3"
+        style="--card-color: var(--alter)"
+      >
+        <div>
+          <div class="tag">Alter Ego</div>
+          <div class="avatar"></div>
+          <div class="card-name">Mr. Fox</div>
+          <div class="card-desc">
+            The best of me, off the record.
+          </div>
         </div>
 
-        <!-- MIDDLE: Flex 1 expands dynamically to hold the visual and side texts -->
-        <div class="flex-1 w-full max-w-6xl mx-auto flex items-center justify-center relative min-h-[220px] my-4">
-            
-            <!-- Desktop Left Texts -->
-            <div class="hidden md:flex absolute left-0 w-64 lg:w-80 h-full flex-col justify-center z-20">
-                <div class="relative w-full h-[180px]">
-                    <div id="h-text-l1" class="story-text-state">
-                        <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block text-sup">01 / ОДИН ЧЕЛОВЕК</span>
-                        <h2 class="text-2xl lg:text-3xl xl:text-4xl font-heading font-bold text-white leading-[1.1] tracking-tight k-split">Все связи начинаются с меня.</h2>
-                    </div>
-                    <div id="h-text-l2" class="story-text-state">
-                        <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block text-sup">02 / МНОГО СТОРОН</span>
-                        <h2 class="text-2xl lg:text-3xl xl:text-4xl font-heading font-bold text-white leading-[1.1] tracking-tight k-split">С каждым я общаюсь по-разному.</h2>
-                    </div>
-                    <div id="h-text-l3" class="story-text-state">
-                        <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-3 block text-sup">03 / СВОИ УСЛОВИЯ</span>
-                        <h2 class="text-2xl lg:text-3xl xl:text-4xl font-heading font-bold text-white leading-[1.1] tracking-tight k-split">Я выбираю, как меня видят.</h2>
-                    </div>
-                </div>
-            </div>
+        <div class="card-id mono">
+          <span>PAGER ID</span>
+          <b>A147 0865</b>
+        </div>
+      </div>
 
-            <!-- Central Visual -->
-            <div class="relative w-[240px] h-[240px] sm:w-[280px] sm:h-[280px] md:w-[420px] md:h-[420px] bg-surface rounded-[16px] border border-white/10 hero-media-glow z-20 shrink-0">
-                <img id="h-img-1" src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/5d3ab8ad-bbef-46ff-8cb7-04d426861a63.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/5d3ab8ad-bbef-46ff-8cb7-04d426861a63.png?raw=true)" class="hero-img-state hero-img-mask" style="opacity: 0.3; filter: brightness(0.8);" fetchpriority="high" alt="Один человек">
-                <img id="h-img-2" src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/93842b8f-e896-456f-a595-2443b3791ced.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/93842b8f-e896-456f-a595-2443b3791ced.png?raw=true)" class="hero-img-state hero-img-mask" alt="Много сторон">
-                <img id="h-img-3" src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/4c56a7b5-f3c6-4fa2-a3d8-d9f11231029b.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_1/4c56a7b5-f3c6-4fa2-a3d8-d9f11231029b.png?raw=true)" class="hero-img-state hero-img-mask" alt="Свои условия">
-            </div>
-
-            <!-- Desktop Right Texts -->
-            <div class="hidden md:flex absolute right-0 w-64 lg:w-80 h-full flex-col justify-center z-20">
-                <div class="relative w-full h-[180px]">
-                    <div id="h-text-r1" class="story-text-state border-l border-white/10 pl-6">
-                        <p class="text-sm lg:text-base text-zinc-400 font-medium leading-relaxed k-split">Личные сообщения, работа, новые контакты, звонки, файлы и голосовые — всё это части одной цифровой жизни.</p>
-                    </div>
-                    <div id="h-text-r2" class="story-text-state border-l border-white/10 pl-6">
-                        <p class="text-sm lg:text-base text-zinc-400 font-medium leading-relaxed mb-4 k-split">С близкими — без формальностей. В работе — по делу. В новых связях — осторожнее.</p>
-                        <p class="text-xs font-semibold text-white border-l-2 border-pager pl-3 k-split">Не разные личности. Разные грани одного человека.</p>
-                    </div>
-                    <div id="h-text-r3" class="story-text-state border-l border-white/10 pl-6">
-                        <p class="text-sm lg:text-base text-zinc-400 font-medium leading-relaxed mb-6 k-split">Профиль, способы общения и уровень доступа определяются для каждой связи отдельно.</p>
-                        <div id="h-text-r3-accent" class="flex items-center gap-2 text-[10px] lg:text-xs font-bold uppercase tracking-widest opacity-0">
-                            <span class="text-white">PAGER ID</span><span class="text-pager">→</span><span class="text-white/70">Профиль</span><span class="text-pager">→</span><span class="text-white/40">Правила</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div
+        class="id-card"
+        data-pos="2"
+        style="--card-color: var(--guest)"
+      >
+        <div>
+          <div class="tag">Guest</div>
+          <div class="avatar"></div>
+          <div class="card-name">
+            Temporary Contact
+          </div>
+          <div class="card-desc">
+            Time-limited access,
+            no history carried forward.
+          </div>
         </div>
 
-        <!-- BOTTOM: Mobile Texts & CTA -->
-        <div class="shrink-0 h-[160px] w-full max-w-md relative flex items-center justify-center z-30">
-            <!-- Mobile Texts -->
-            <div id="m-text-1" class="md:hidden story-text-state flex flex-col items-center text-center inset-0 opacity-0 justify-center">
-                <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-2 block">01 / ОДИН ЧЕЛОВЕК</span>
-                <h2 class="text-2xl font-heading font-bold text-white mb-2 leading-[1.1] tracking-tight">Все связи начинаются с меня.</h2>
-                <p class="text-[11px] text-zinc-400 font-medium px-2">Личные сообщения, работа, новые контакты, звонки, файлы и голосовые — всё это части одной цифровой жизни.</p>
-            </div>
-            <div id="m-text-2" class="md:hidden story-text-state flex flex-col items-center text-center inset-0 opacity-0 justify-center">
-                <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-2 block">02 / МНОГО СТОРОН</span>
-                <h2 class="text-2xl font-heading font-bold text-white mb-2 leading-[1.1] tracking-tight">С каждым я общаюсь по-разному.</h2>
-                <p class="text-[11px] text-zinc-400 font-medium mb-3 px-2">С близкими — без формальностей. В работе — по делу. В новых связях — осторожнее.</p>
-                <p class="text-[10px] font-semibold text-white border-b-2 border-pager pb-1 inline-block">Не разные личности. Разные грани одного человека.</p>
-            </div>
-            <div id="m-text-3" class="md:hidden story-text-state flex flex-col items-center text-center inset-0 opacity-0 justify-center">
-                <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-2 block">03 / СВОИ УСЛОВИЯ</span>
-                <h2 class="text-2xl font-heading font-bold text-white mb-2 leading-[1.1] tracking-tight">Я выбираю, как меня видят.</h2>
-                <p class="text-[11px] text-zinc-400 font-medium mb-3 px-2">Профиль, способы общения и уровень доступа определяются для каждой связи отдельно.</p>
-                <div class="flex items-center justify-center gap-1 text-[9px] font-bold uppercase tracking-widest text-white">
-                    <span>PAGER ID</span><span class="text-pager">→</span><span>Профиль</span><span class="text-pager">→</span><span>Правила</span>
-                </div>
-            </div>
-
-            <!-- Final CTA -->
-            <div id="hero-final" class="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-0 pointer-events-none">
-                <p class="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest k-split-final">Один человек. Много сторон. Свой способ общения.</p>
-                <div class="flex flex-col sm:flex-row gap-3 btn-container w-full max-w-sm">
-                    <a href="mailto:investors@pager.app" class="btn-primary py-3.5 uppercase tracking-widest text-[11px] w-full flex-1">Запросить презентацию</a>
-                    <a href="#demo" class="btn-secondary py-3.5 uppercase tracking-widest text-[11px] w-full flex-1">Как это работает</a>
-                </div>
-            </div>
+        <div class="card-id mono">
+          <span>PAGER ID</span>
+          <b>A147 0865</b>
         </div>
+      </div>
+
+      <div
+        class="id-card"
+        data-pos="1"
+        style="--card-color: var(--work)"
+      >
+        <div>
+          <div class="tag">Work</div>
+          <div class="avatar"></div>
+          <div class="card-name">
+            Quest Hero
+          </div>
+          <div class="card-desc">
+            Product and client communication only.
+          </div>
+        </div>
+
+        <div class="card-id mono">
+          <span>PAGER ID</span>
+          <b>A147 0865</b>
+        </div>
+      </div>
+
+      <div
+        class="id-card"
+        data-pos="0"
+        style="--card-color: var(--personal)"
+      >
+        <div>
+          <div class="tag">Personal</div>
+          <div class="avatar"></div>
+          <div class="card-name">
+            Alex Reyes
+          </div>
+          <div class="card-desc">
+            Close friends and family.
+          </div>
+        </div>
+
+        <div class="card-id mono">
+          <span>PAGER ID</span>
+          <b>A147 0865</b>
+        </div>
+      </div>
 
     </div>
+
+    <div class="phone">
+      <div
+        class="phone-screen"
+        style="--phone-color: var(--personal)"
+      >
+
+        <div class="phone-topline">
+          <span>9:41</span>
+          <span>PAGER</span>
+        </div>
+
+        <div class="phone-avatar"></div>
+
+        <div class="phone-tag">
+          Personal
+        </div>
+
+        <div class="phone-name">
+          Alex Reyes
+        </div>
+
+        <div class="phone-desc">
+          Close friends and family.
+        </div>
+
+        <div class="phone-meta">
+
+          <div class="phone-audience">
+            <span>Audience</span>
+            <b>18 contacts</b>
+          </div>
+
+          <div class="perm-row">
+            <div class="perm on">Text</div>
+            <div class="perm on">Audio</div>
+            <div class="perm on">Video</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Scroll to see the model</span>
+    <div class="line"></div>
+  </div>
+
 </section>
 
-<!-- БЛОК: Инфо-панель -->
-<section class="border-b border-white/10 relative z-20 bg-black">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/10">
-            
-            <div class="py-8 md:px-6 md:py-10 reveal-up">
-                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-2">Запрос на общение</p>
-                <p class="text-[11px] font-bold text-pager mb-1">Найти человека</p>
-                <p class="text-lg font-heading font-bold text-white tracking-tight">PAGER ID</p>
-            </div>
-            
-            <div class="py-8 md:px-6 md:py-10 reveal-up" style="transition-delay: 0.1s;">
-                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-2 opacity-0 hidden md:block">Spacer</p>
-                <p class="text-[11px] font-bold text-pager mb-1">Выбрать представление</p>
-                <p class="text-lg font-heading font-bold text-white tracking-tight">Профиль</p>
-            </div>
+<!-- PROBLEM -->
 
-            <div class="py-8 md:px-6 md:py-10 reveal-up" style="transition-delay: 0.2s;">
-                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-2 opacity-0 hidden md:block">Spacer</p>
-                <p class="text-[11px] font-bold text-pager mb-1">Определить условия</p>
-                <p class="text-lg font-heading font-bold text-white tracking-tight">Правила общения</p>
-            </div>
+<section class="problem">
+  <div class="problem-inner">
 
-            <div class="py-8 md:px-6 md:py-10 reveal-up" style="transition-delay: 0.3s;">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">План запуска</p>
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-semibold text-white">Private beta</span>
-                    <span class="text-[10px] font-mono text-white border border-white/20 px-2 py-0.5 rounded">Q3 2026</span>
-                </div>
-                <div class="flex justify-between items-center pt-2 border-t border-white/5">
-                    <span class="text-sm font-semibold text-zinc-400">App Store / Google Play</span>
-                    <span class="text-[10px] font-mono text-zinc-400 border border-white/10 px-2 py-0.5 rounded">Q1 2027</span>
-                </div>
-            </div>
-        </div>
+    <div class="problem-label">
+      THE DEFAULT TODAY
     </div>
+
+    <h2>
+      One phone number. One profile.<br>
+      Everyone who has it sees the same you —<br>
+      family, clients, couriers, strangers.
+    </h2>
+
+    <div class="flat-card">
+
+      <div class="avatar"></div>
+
+      <div>
+        <div class="fc-title">
+          +1 •••• ••92
+        </div>
+
+        <div class="fc-sub">
+          Reachable by anyone,
+          in every context,
+          all the time.
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
-<!-- БЛОК: Бегущая строка -->
-<div class="overflow-hidden whitespace-nowrap py-5 border-b border-white/10 bg-black">
-    <div class="marquee-track font-heading text-sm font-bold tracking-widest text-zinc-500 uppercase">
-        <!-- Double content for seamless scroll -->
-        <div class="flex items-center">
-            <span class="mx-6 text-white">Мультипрофиль</span><span class="mx-2 text-zinc-800">/</span>
-            <span class="mx-6">Правила общения для каждого контакта</span><span class="mx-2 text-zinc-800">/</span>
-            <span class="mx-6 text-white">Временный доступ на 24 часа</span><span class="mx-2 text-zinc-800">/</span>
-            <span class="mx-6">Без номера телефона</span><span class="mx-2 text-zinc-800">/</span>
-        </div>
-        <div class="flex items-center">
-            <span class="mx-6 text-white">Мультипрофиль</span><span class="mx-2 text-zinc-800">/</span>
-            <span class="mx-6">Правила общения для каждого контакта</span><span class="mx-2 text-zinc-800">/</span>
-            <span class="mx-6 text-white">Временный доступ на 24 часа</span><span class="mx-2 text-zinc-800">/</span>
-            <span class="mx-6">Без номера телефона</span><span class="mx-2 text-zinc-800">/</span>
-        </div>
+<!-- MULTIPROFILE -->
+
+<section
+  class="multiprofile"
+  id="mpSection"
+>
+
+  <div class="mp-sticky">
+
+    <div class="mp-heading">
+
+      <div class="eyebrow">
+        THE CORE MECHANIC
+      </div>
+
+      <h2>
+        One account.
+        Multiple communication identities.
+      </h2>
+
+      <p>
+        Every profile carries its own name,
+        avatar, audience and permissions —
+        behind a single, unchanging Pager ID.
+      </p>
+
     </div>
+
+    <div class="mp-body">
+
+      <div
+        class="mp-labels"
+        id="mpLabels"
+      >
+
+        <div
+          class="mp-label active"
+          data-index="0"
+          style="--active-color: var(--personal)"
+        >
+          Personal
+          <small>
+            Close friends & family
+          </small>
+        </div>
+
+        <div
+          class="mp-label"
+          data-index="1"
+          style="--active-color: var(--work)"
+        >
+          Work
+          <small>
+            Quest Hero
+          </small>
+        </div>
+
+        <div
+          class="mp-label"
+          data-index="2"
+          style="--active-color: var(--guest)"
+        >
+          Guest
+          <small>
+            Temporary access
+          </small>
+        </div>
+
+        <div
+          class="mp-label"
+          data-index="3"
+          style="--active-color: var(--alter)"
+        >
+          Alter Ego
+          <small>
+            Mr. Fox
+          </small>
+        </div>
+
+      </div>
+
+      <div
+        class="stage"
+        id="mpStage"
+      >
+
+        <div
+          class="deck"
+          id="mpDeck"
+        >
+
+          <div
+            class="id-card"
+            data-idx="3"
+            style="--card-color: var(--alter)"
+          >
+            <div>
+              <div class="tag">
+                Alter Ego
+              </div>
+
+              <div class="avatar"></div>
+
+              <div class="card-name">
+                Mr. Fox
+              </div>
+
+              <div class="card-desc">
+                The best of me,
+                off the record.
+              </div>
+            </div>
+
+            <div class="card-id mono">
+              <span>PAGER ID</span>
+              <b>A147 0865</b>
+            </div>
+          </div>
+
+          <div
+            class="id-card"
+            data-idx="2"
+            style="--card-color: var(--guest)"
+          >
+            <div>
+              <div class="tag">Guest</div>
+
+              <div class="avatar"></div>
+
+              <div class="card-name">
+                Temporary Contact
+              </div>
+
+              <div class="card-desc">
+                Time-limited access,
+                no history carried forward.
+              </div>
+            </div>
+
+            <div class="card-id mono">
+              <span>PAGER ID</span>
+              <b>A147 0865</b>
+            </div>
+          </div>
+
+          <div
+            class="id-card"
+            data-idx="1"
+            style="--card-color: var(--work)"
+          >
+            <div>
+              <div class="tag">Work</div>
+
+              <div class="avatar"></div>
+
+              <div class="card-name">
+                Quest Hero
+              </div>
+
+              <div class="card-desc">
+                Product and client
+                communication only.
+              </div>
+            </div>
+
+            <div class="card-id mono">
+              <span>PAGER ID</span>
+              <b>A147 0865</b>
+            </div>
+          </div>
+
+          <div
+            class="id-card"
+            data-idx="0"
+            style="--card-color: var(--personal)"
+          >
+            <div>
+              <div class="tag">
+                Personal
+              </div>
+
+              <div class="avatar"></div>
+
+              <div class="card-name">
+                Alex Reyes
+              </div>
+
+              <div class="card-desc">
+                Close friends and family.
+              </div>
+            </div>
+
+            <div class="card-id mono">
+              <span>PAGER ID</span>
+              <b>A147 0865</b>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="phone">
+
+          <div
+            class="phone-screen"
+            id="mpPhoneScreen"
+            style="--phone-color: var(--personal)"
+          >
+
+            <div class="phone-topline">
+              <span>9:41</span>
+              <span>PAGER</span>
+            </div>
+
+            <div class="phone-avatar"></div>
+
+            <div class="phone-tag">
+              Personal
+            </div>
+
+            <div class="phone-name">
+              Alex Reyes
+            </div>
+
+            <div class="phone-desc">
+              Close friends and family.
+            </div>
+
+            <div class="phone-meta">
+
+              <div class="phone-audience">
+                <span>Audience</span>
+                <b>18 contacts</b>
+              </div>
+
+              <div class="perm-row">
+                <div class="perm on">
+                  Text
+                </div>
+
+                <div class="perm on">
+                  Audio
+                </div>
+
+                <div class="perm on">
+                  Video
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mp-progress">
+      <div
+        class="mp-progress-fill"
+        id="mpProgressFill"
+      ></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY IT MATTERS -->
+
+<section class="why">
+
+  <div class="why-inner">
+
+    <div class="why-head">
+      Not just who can reach you.
+      Which version of you they reach.
+    </div>
+
+    <div class="why-grid">
+
+      <div class="why-item">
+        <div class="wi-label">
+          Privacy
+        </div>
+
+        <p>
+          No phone number is ever exposed.
+          Contact happens through an ID
+          you control.
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-label">
+          Contextual identity
+        </div>
+
+        <p>
+          Different relationships see
+          a different name, avatar and
+          description — not a different account.
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-label">
+          Directional access
+        </div>
+
+        <p>
+          Text, audio and video are granted
+          individually, by the receiver,
+          per relationship.
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-label">
+          Safer first contact
+        </div>
+
+        <p>
+          Nobody enters a conversation
+          without a request being accepted first.
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-label">
+          Temporary access
+        </div>
+
+        <p>
+          Couriers, services and short-term
+          contacts can be granted access
+          that expires on its own.
+        </p>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-label">
+          One identity, not many
+        </div>
+
+        <p>
+          A single Pager ID underlies
+          every profile — nothing about
+          multiprofile fragments the account.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+
+<section class="cta">
+
+  <h2>
+    PAGER is building a new access layer
+    for messaging — controlled reachability,
+    with contextual identity built in.
+  </h2>
+
+  <div class="cta-actions">
+
+    <a
+      href="mailto:hello@getpager.app?subject=PAGER%20deck%20request"
+      class="btn btn-primary"
+    >
+      Request the deck
+    </a>
+
+    <a
+      href="mailto:hello@getpager.app?subject=PAGER%20conversation"
+      class="btn btn-ghost"
+    >
+      Book a conversation
+    </a>
+
+  </div>
+
+</section>
+
+<div class="foot mono">
+  getpager.app
 </div>
 
-<!-- БЛОК: Эволюция цифрового общения -->
-<section class="py-32 bg-black relative z-10 border-b border-white/10" id="product">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="mb-16 reveal-up">
-            <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4">Эволюция цифрового общения</p>
-            <h2 class="font-heading text-5xl md:text-6xl font-extrabold mb-6 text-white tracking-tight">НЕ СКОРОСТЬ. ВЫБОР!</h2>
-            <p class="text-xl text-zinc-300 max-w-3xl mb-4 font-medium leading-relaxed">Цифровое общение сделало нас доступными. Пора выбирать, как именно мы общаемся.</p>
-            <p class="text-base text-zinc-500 max-w-3xl leading-relaxed">Мы добавляем новый уровень коммуникации — разные профили, персональные правила и возможность управлять каждой связью.</p>
-        </div>
-
-        <!-- Bento Grid -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="glow-card p-8 flex flex-col reveal-up">
-                <div class="h-40 flex items-center justify-center mb-6">
-                    <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/1_email.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/1_email.png?raw=true)" alt="Email" class="h-full object-contain filter brightness-75 mask-bottom">
-                </div>
-                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Передача информации</span>
-                <h4 class="font-heading text-2xl mb-4 text-white font-bold">E-mail</h4>
-                <p class="text-xs font-semibold text-white mb-2">Как отправить сообщение?</p>
-                <p class="text-xs text-zinc-400 mb-6 flex-grow leading-relaxed">Первое цифровое общение решило главную задачу — передать информацию между людьми независимо от расстояния.</p>
-                <div class="pt-4 border-t border-white/5 mt-auto">
-                    <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Главное изменение:</p>
-                    <p class="text-xs font-semibold text-white">Сообщение больше не зависело от физического носителя.</p>
-                </div>
-            </div>
-
-            <div class="glow-card p-8 flex flex-col reveal-up" style="transition-delay: 0.1s;">
-                <div class="h-40 flex items-center justify-center mb-6">
-                    <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/2_sms.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/2_sms.png?raw=true)" alt="SMS" class="h-full object-contain filter brightness-75 mask-bottom">
-                </div>
-                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Доступная связь</span>
-                <h4 class="font-heading text-2xl mb-4 text-white font-bold">SMS / мобильные</h4>
-                <p class="text-xs font-semibold text-white mb-2">Как связаться быстрее?</p>
-                <p class="text-xs text-zinc-400 mb-6 flex-grow leading-relaxed">Мобильные сообщения сделали человека доступным в любой момент и приблизили общение к реальному времени.</p>
-                <div class="pt-4 border-t border-white/5 mt-auto">
-                    <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Главное изменение:</p>
-                    <p class="text-xs font-semibold text-white">Связаться стало проще и быстрее.</p>
-                </div>
-            </div>
-
-            <div class="glow-card p-8 flex flex-col reveal-up" style="transition-delay: 0.2s;">
-                <div class="h-40 flex items-center justify-center mb-6">
-                    <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/3_chat.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/3_chat.png?raw=true)" alt="Chats" class="h-full object-contain filter brightness-75 mask-bottom">
-                </div>
-                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Мгновенное общение</span>
-                <h4 class="font-heading text-2xl mb-4 text-white font-bold">Чаты / группы</h4>
-                <p class="text-xs font-semibold text-white mb-2">Как общаться в реальном времени?</p>
-                <p class="text-xs text-zinc-400 mb-6 flex-grow leading-relaxed">Мессенджеры объединили разные способы общения в одном пространстве и сделали постоянную связь привычной.</p>
-                <div class="pt-4 border-t border-white/5 mt-auto">
-                    <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Главное изменение:</p>
-                    <p class="text-xs font-semibold text-white">Общение стало непрерывным.</p>
-                </div>
-            </div>
-
-            <div class="glow-card p-8 flex flex-col border-pager/30 bg-[#050505] reveal-up" style="transition-delay: 0.3s;">
-                <div class="h-40 flex items-center justify-center mb-6 relative">
-                    <div class="absolute inset-0 bg-pager/20 blur-2xl rounded-full z-0"></div>
-                    <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/4_pager.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_2/4_pager.png?raw=true)" alt="PAGER" class="h-full object-contain relative z-10 mask-bottom">
-                </div>
-                <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-2">Управляемое общение</span>
-                <h4 class="font-heading text-2xl mb-4 text-white font-bold">Мультипрофиль / правила</h4>
-                <p class="text-xs font-semibold text-white mb-2">Как выбирать формат связи?</p>
-                <p class="text-xs text-zinc-400 mb-6 flex-grow leading-relaxed">PAGER добавляет новый уровень: разные профили, персональные правила и возможность управлять тем, как происходит каждое взаимодействие.</p>
-                <div class="pt-4 border-t border-white/10 mt-auto">
-                    <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-1">Главное изменение:</p>
-                    <p class="text-xs font-semibold text-white">Общение становится персональным.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Почему сейчас -->
-        <div class="grid lg:grid-cols-2 gap-6 reveal-up">
-            <div class="glow-card p-10">
-                <h3 class="font-heading text-3xl mb-4 text-white font-bold tracking-tight">Почему сейчас?</h3>
-                <p class="text-lg text-white font-semibold mb-4">Один профиль больше не отражает современную жизнь.</p>
-                <p class="text-zinc-400 text-sm leading-relaxed">Раньше цифровое общение решало задачу передачи сообщений. Сегодня один человек одновременно существует в разных контекстах: работа, семья, друзья, сообщества, новые связи. Но цифровое представление остается одним.</p>
-            </div>
-            <div class="glow-card p-10 flex items-center justify-center">
-                <div class="flex flex-col sm:flex-row items-center gap-4 text-xs font-bold uppercase tracking-widest text-center">
-                    <span class="text-zinc-600">Передать</span><span class="text-zinc-800">→</span>
-                    <span class="text-zinc-500">Соединять</span><span class="text-zinc-800">→</span>
-                    <span class="text-zinc-400">Общаться</span><span class="text-zinc-800">→</span>
-                    <span class="text-pager text-sm px-3 py-1.5 border border-pager/30 rounded-full">Управлять</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: PAGER ID -->
-<section class="py-32 bg-black relative z-10 border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-        <div class="reveal-up">
-            <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4">Новый способ находить людей</p>
-            <h2 class="font-heading text-5xl md:text-7xl font-bold mb-6 leading-tight text-white tracking-tighter uppercase">
-                НЕ НОМЕР.<br>НЕ НИКНЕЙМ.<br>PAGER ID
-            </h2>
-            <p class="text-lg text-white mb-10 font-medium leading-relaxed max-w-xl">Новый способ начать связь без немедленного доступа к вашему личному пространству.</p>
-            
-            <div class="border-l-2 border-pager pl-6 mb-10">
-                <p class="font-semibold mb-4 text-[11px] uppercase tracking-widest text-zinc-500">Сегодня номер телефона одновременно является:</p>
-                <ul class="space-y-3 text-zinc-300 text-sm font-medium">
-                    <li>— способом найти человека;</li>
-                    <li>— способом связаться;</li>
-                    <li>— доступом к личному пространству.</li>
-                </ul>
-            </div>
-            
-            <p class="text-zinc-400 leading-relaxed text-sm font-medium mb-10">PAGER ID позволяет найти человека и отправить запрос на связь, а пользователь сам выбирает, какой профиль открыть и какие условия общения установить.</p>
-            
-            <div class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-zinc-500 flex-wrap">
-                <span class="text-white border border-white/20 px-3 py-1.5 rounded-full">Найти человека</span> 
-                <span>→</span>
-                <span class="text-white border border-white/20 px-3 py-1.5 rounded-full">Выбрать профиль</span> 
-                <span>→</span>
-                <span class="text-white border border-white/20 px-3 py-1.5 rounded-full">Определить правила</span>
-            </div>
-        </div>
-        
-        <div class="flex justify-center reveal-up">
-            <div class="relative w-full max-w-md">
-                <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_3/pager_id_variation_002.jpg?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_3/pager_id_variation_002.jpg?raw=true)" alt="PAGER ID" class="w-full h-auto rounded-2xl border border-white/10 shadow-2xl shadow-pager/10">
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: Сторискролл (Мультипрофиль) -->
-<section class="bg-black border-b border-white/10" id="demo">
-    <div class="max-w-7xl mx-auto px-6 py-32 text-center reveal-up">
-        <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4">Мультипрофиль</p>
-        <h2 class="font-heading text-4xl md:text-6xl font-extrabold mb-6 text-white tracking-tighter">ОДИН ЧЕЛОВЕК.<br>НЕСКОЛЬКО СПОСОБОВ БЫТЬ СОБОЙ.</h2>
-        <p class="text-xl text-white font-medium mb-6">Я остаюсь собой, но открываюсь по-разному.</p>
-        <p class="text-sm text-zinc-400 max-w-3xl mx-auto leading-relaxed font-medium">Мультипрофиль меняет привычную модель цифрового общения. Один человек может создавать разные пространства общения внутри одного аккаунта, сохраняя контроль над тем, как он представлен и как происходит каждое взаимодействие.</p>
-    </div>
-
-    <!-- Desktop Storyscroll -->
-    <div class="hidden md:flex relative w-full lg:flex-row h-[400vh]" id="story-container-desktop">
-        <div class="w-1/2 sticky top-0 h-screen overflow-hidden z-0 flex items-center justify-center border-r border-white/10 bg-[#050505]">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_1.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_1.png?raw=true)" class="story-img active mask-bottom" id="img-story-1" alt="Проблема">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_2.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_2.png?raw=true)" class="story-img mask-bottom" id="img-story-2" alt="Осознание">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_3.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_3.png?raw=true)" class="story-img mask-bottom" id="img-story-3" alt="Решение">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_4.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_4.png?raw=true)" class="story-img mask-bottom" id="img-story-4" alt="Масштаб">
-        </div>
-
-        <div class="w-1/2 relative z-10">
-            <div class="h-screen flex items-center justify-center p-12 story-step" data-step="1">
-                <div class="story-step-content glow-card p-10 w-full max-w-md">
-                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4 block">Проблема</span>
-                    <h3 class="font-heading text-2xl mb-4 text-white font-bold tracking-tight">Сегодня у нас одно цифровое представление для всех отношений</h3>
-                    <p class="text-white text-sm mb-4 font-medium">Один профиль становится общей точкой для всех связей.</p>
-                    <p class="text-zinc-400 text-sm leading-relaxed">Работа, семья, друзья и новые знакомства видят одну и ту же версию вас.</p>
-                </div>
-            </div>
-            <div class="h-screen flex items-center justify-center p-12 story-step" data-step="2">
-                <div class="story-step-content glow-card p-10 w-full max-w-md">
-                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4 block">Осознание</span>
-                    <h3 class="font-heading text-2xl mb-4 text-white font-bold tracking-tight">Цифровой профиль не отражает всего человека.</h3>
-                    <p class="text-zinc-400 text-sm mb-4 leading-relaxed">В реальной жизни мы разные: в семье; в работе; с друзьями; с незнакомыми людьми.</p>
-                    <p class="text-white font-semibold text-sm border-l-2 border-pager pl-4">Это не разные личности. Это разные грани одного человека.</p>
-                </div>
-            </div>
-            <div class="h-screen flex items-center justify-center p-12 story-step" data-step="3">
-                <div class="story-step-content glow-card p-10 w-full max-w-md">
-                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4 block">Решение</span>
-                    <h3 class="font-heading text-2xl mb-4 text-white font-bold tracking-tight">PAGER создает разные пространства общения</h3>
-                    <p class="text-zinc-400 text-sm mb-4 leading-relaxed">Создайте разные пространства общения внутри одного аккаунта. Каждое пространство может иметь:</p>
-                    <ul class="space-y-2 text-white text-sm font-medium">
-                        <li>— свое представление;</li>
-                        <li>— свои правила;</li>
-                        <li>— свой уровень доступности.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="h-screen flex items-center justify-center p-12 story-step" data-step="4">
-                <div class="story-step-content glow-card border-pager/30 bg-[#050505] p-10 w-full max-w-md">
-                    <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4 block">Масштаб</span>
-                    <h3 class="font-heading text-3xl mb-4 text-white font-bold tracking-tight">Один человек. Несколько способов быть собой.</h3>
-                    <p class="text-zinc-400 text-sm mb-8 leading-relaxed">Ваши профили работают вместе, сохраняя единый аккаунт и полный контроль над каждой связью.</p>
-                    <p class="text-lg text-white font-bold mb-6">Разный. Но всегда я!</p>
-                    <div class="pt-4 border-t border-white/10">
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Мессенджеры управляют сообщениями. PAGER управляет тем, как человек присутствует в цифровом мире.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile Story Fallback (With restored images) -->
-    <div class="md:hidden flex flex-col px-6 pb-20 space-y-6">
-        <div class="glow-card p-6 reveal-up">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_1.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_1.png?raw=true)" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Проблема">
-            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Проблема</span>
-            <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">Одно цифровое представление для всех отношений</h3>
-            <p class="text-zinc-400 text-sm leading-relaxed">Работа, семья, друзья и новые знакомства видят одну и ту же версию вас.</p>
-        </div>
-        <div class="glow-card p-6 reveal-up">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_2.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_2.png?raw=true)" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Осознание">
-            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Осознание</span>
-            <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">Цифровой профиль не отражает всего человека.</h3>
-            <p class="text-zinc-400 text-sm leading-relaxed mb-4">В реальной жизни мы разные: в семье; в работе; с друзьями; с незнакомыми людьми.</p>
-            <p class="text-white font-semibold text-sm border-l-2 border-pager pl-4">Это не разные личности. Это разные грани одного человека.</p>
-        </div>
-        <div class="glow-card p-6 reveal-up">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_3.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_3.png?raw=true)" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Решение">
-            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Решение</span>
-            <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">PAGER создает разные пространства общения</h3>
-            <p class="text-zinc-400 text-sm leading-relaxed mb-4">Создайте разные пространства общения внутри одного аккаунта. Каждое пространство может иметь:</p>
-            <ul class="space-y-2 text-white text-sm font-medium">
-                <li>— свое представление;</li>
-                <li>— свои правила;</li>
-                <li>— свой уровень доступности.</li>
-            </ul>
-        </div>
-        <div class="glow-card border-pager/30 bg-[#050505] p-6 reveal-up">
-            <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_4.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_4/mpf_desktop_4.png?raw=true)" class="h-48 w-full object-contain mb-6 mask-bottom" alt="Масштаб">
-            <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-2 block">Масштаб</span>
-            <h3 class="font-heading text-xl mb-3 text-white font-bold tracking-tight">Один человек. Несколько способов быть собой.</h3>
-            <p class="text-zinc-400 text-sm leading-relaxed mb-6">Ваши профили работают вместе, сохраняя единый аккаунт и полный контроль над каждой связью.</p>
-            <p class="text-base text-white font-bold mb-4">Разный. Но всегда я!</p>
-            <div class="pt-4 border-t border-white/10">
-                <p class="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Мессенджеры управляют сообщениями. PAGER управляет тем, как человек присутствует в цифровом мире.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: Контекст контакта (Детальные карточки с 4 профилями) -->
-<section class="py-32 bg-black relative z-10 overflow-hidden border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-6 mb-16 reveal-up">
-        <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4">Контекст контакта</p>
-        <h2 class="font-heading text-4xl md:text-6xl font-bold mb-4 text-white tracking-tight">ОДИН ЧЕЛОВЕК.<br>РАЗНЫЕ СПОСОБЫ ОБЩЕНИЯ.</h2>
-        <p class="text-lg text-white font-medium mb-4">Один человек может быть представлен по-разному — в зависимости от того, кто находится по другую сторону связи.</p>
-        <p class="text-base text-zinc-400 font-medium leading-relaxed max-w-3xl">PAGER связывает контакт и профиль: вы выбираете, какую версию себя показать, какие правила установить и какой уровень доступа открыть.</p>
-    </div>
-
-    <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 pb-12 pr-[15vw] md:pr-[20vw] scroll-container px-6 max-w-7xl mx-auto">
-        
-        <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up">
-            <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
-                <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_2x.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_2x.png?raw=true)" alt="Личное" class="w-full h-full object-cover object-top mask-bottom">
-            </div>
-            <div class="mb-6">
-                <h3 class="font-heading text-2xl font-bold text-white mb-1">Личное</h3>
-                <p class="text-[11px] text-zinc-400 font-medium h-8">Для тех, с кем можно быть без формальностей.</p>
-            </div>
-            <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
-                        <p class="text-sm font-bold text-white">Андрей</p>
-                    </div>
-                    <span class="text-[9px] font-bold uppercase tracking-widest text-access border border-access/20 bg-access/5 px-2 py-1 rounded text-right">Семья · Друзья</span>
-                </div>
-                <div class="mb-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Описание</p>
-                    <p class="text-xs text-white">Люблю путешествия, семью и хорошие разговоры</p>
-                </div>
-                <div class="border-t border-white/5 pt-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-3">Правила:</p>
-                    <div class="grid grid-cols-1 gap-y-2">
-                        <p class="text-xs text-white flex items-center"><span class="text-access w-4 text-center">✓</span> Текстовые сообщения</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-access w-4 text-center">✓</span> Аудиосообщения</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-access w-4 text-center">✓</span> Видеосообщения</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-access w-4 text-center">✓</span> Аудио- и видеозвонки</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-access w-4 text-center">✓</span> Добавление в группы</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-access w-4 text-center">✓</span> Видимость онлайн</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up" style="transition-delay: 0.1s;">
-            <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
-                <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_3x.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_3x.png?raw=true)" alt="Работа" class="w-full h-full object-cover object-top mask-bottom">
-            </div>
-            <div class="mb-6">
-                <h3 class="font-heading text-2xl font-bold text-white mb-1">Работа</h3>
-                <p class="text-[11px] text-zinc-400 font-medium h-8">Для профессиональных связей.</p>
-            </div>
-            <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
-                        <p class="text-sm font-bold text-white">Андрей Смирнов</p>
-                    </div>
-                    <span class="text-[9px] font-bold uppercase tracking-widest text-pager border border-pager/20 bg-pager/5 px-2 py-1 rounded text-right">Рабочие контакты</span>
-                </div>
-                <div class="mb-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Описание / Компания</p>
-                    <p class="text-xs text-white">Product Manager · Digital products<br>Nova Labs</p>
-                </div>
-                <div class="border-t border-white/5 pt-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-3">Правила:</p>
-                    <div class="grid grid-cols-1 gap-y-2">
-                        <p class="text-xs text-white flex items-center"><span class="text-pager w-4 text-center">✓</span> Текстовые сообщения</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-pager w-4 text-center">✓</span> Аудиосообщения</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Видеосообщения</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-pager w-4 text-center">✓</span> Аудиозвонки</p>
-                        <p class="text-xs text-white flex items-center"><span class="text-pager w-4 text-center">✓</span> Добавление в группы</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Видимость онлайн</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up" style="transition-delay: 0.2s;">
-            <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
-                <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_4x.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_4x.png?raw=true)" alt="Гостевое" class="w-full h-full object-cover object-top mask-bottom">
-            </div>
-            <div class="mb-6">
-                <h3 class="font-heading text-2xl font-bold text-white mb-1">Гостевое</h3>
-                <p class="text-[11px] text-zinc-400 font-medium h-8">Для новых или временных контактов.</p>
-            </div>
-            <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto relative">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
-                        <p class="text-sm font-bold text-white">Смирнов А.А.</p>
-                    </div>
-                    <span class="text-[9px] font-bold uppercase tracking-widest text-time border border-time/20 bg-time/5 px-2 py-1 rounded text-right">Временный доступ</span>
-                </div>
-                <div class="mb-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Описание</p>
-                    <p class="text-xs text-white">Открыт к новым знакомствам</p>
-                </div>
-                <div class="border-t border-white/5 pt-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-3">Правила:</p>
-                    <div class="grid grid-cols-1 gap-y-2">
-                        <p class="text-xs text-white flex items-center"><span class="text-time w-4 text-center">✓</span> Текстовые сообщения</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Аудиосообщения</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Видеосообщения</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Аудио- и видеозвонки</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Добавление в группы</p>
-                        <p class="text-xs text-zinc-500 flex items-center"><span class="w-4 text-center">✕</span> Видимость онлайн</p>
-                        <p class="text-xs text-time flex items-center font-bold mt-2"><span class="text-time w-4 text-center">⏱</span> Доступ 24 часа</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="snap-start shrink-0 w-[85vw] md:w-[350px] glow-card p-5 flex flex-col reveal-up" style="transition-delay: 0.3s;">
-            <div class="h-48 relative w-full rounded-lg overflow-hidden mb-5 bg-[#050505]">
-                <img src="[https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_5x.png?raw=true](https://github.com/pagerapp/pager-investor/blob/main/img_4web/block_5/Hero_man_5x.png?raw=true)" alt="Особый" class="w-full h-full object-cover object-top mask-bottom">
-            </div>
-            <div class="mb-6">
-                <h3 class="font-heading text-2xl font-bold text-white mb-1">Особый контекст</h3>
-                <p class="text-[11px] text-zinc-400 font-medium h-8">Для любых других сценариев общения.</p>
-            </div>
-            <div class="bg-[#050505] border border-white/5 p-5 rounded-xl mt-auto relative">
-                <div class="mb-4">
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-2">Например:</p>
-                    <ul class="text-xs text-white space-y-1">
-                        <li>— сообщество;</li>
-                        <li>— публичный профиль;</li>
-                        <li>— новый проект;</li>
-                        <li>— временная связь.</li>
-                    </ul>
-                </div>
-                <div class="border-t border-white/5 pt-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Имя</p>
-                            <p class="text-sm font-bold text-white">Andrey / Project X</p>
-                        </div>
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-zinc-300 border border-white/20 bg-white/5 px-2 py-1 rounded text-right">Команда</span>
-                    </div>
-                    <p class="text-xs text-white mb-4">Founder · Technology · Design</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="max-w-7xl mx-auto px-6 mt-8 reveal-up text-center border-t border-white/10 pt-8">
-        <p class="text-lg text-white font-bold">Каждая связь — свой формат. Свои правила. Свой доступ. Свой способ общения.</p>
-    </div>
-</section>
-
-<!-- БЛОК: Статус -->
-<section class="py-32 bg-black relative z-10 border-b border-white/10" id="status">
-    <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-start">
-        <div class="reveal-up">
-            <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4">Состояние продукта</p>
-            <h2 class="font-heading text-4xl md:text-5xl mb-6 text-white font-bold tracking-tight">Основа новой модели общения уже создана</h2>
-            <p class="text-base text-zinc-400 mb-8 font-medium leading-relaxed">PAGER уже реализует ключевую идею продукта: связь начинается не только с сообщения, а с выбора профиля, правил и формата взаимодействия.</p>
-            
-            <div class="glow-card p-6 inline-block mb-6 w-full max-w-sm">
-                <p class="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">Системная информация:</p>
-                <p class="text-xl text-white font-bold tracking-tight flex items-center justify-between">
-                    Текущий статус: Private beta 
-                    <span class="bg-white/10 text-white px-2 py-1 rounded text-xs font-mono">Q3 2026</span>
-                </p>
-                <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-4">Android, iOS</p>
-            </div>
-        </div>
-        
-        <div class="reveal-up glow-card p-8 md:p-10">
-            <h3 class="text-lg font-bold text-white mb-6 border-b border-white/10 pb-4">Уже собрано</h3>
-            
-            <div class="mb-8">
-                <p class="text-[10px] font-bold text-zinc-500 mb-3 uppercase tracking-widest">Базовая коммуникация</p>
-                <ul class="text-sm font-semibold text-white space-y-2">
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Регистрация</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> PAGER ID</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Поиск по ID</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Запросы на контакт</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> 1:1-диалоги</li>
-                </ul>
-            </div>
-            
-            <div class="mb-8">
-                <p class="text-[10px] font-bold text-zinc-500 mb-3 uppercase tracking-widest">Ключевая механика PAGER</p>
-                <ul class="text-sm font-semibold text-white space-y-2">
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Базовый профиль</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Контекстные профили</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Управление способами общения</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Гостевой профиль</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">✓</span> Временный доступ</li>
-                </ul>
-            </div>
-
-            <div class="border-t border-white/10 pt-6">
-                <p class="text-[10px] font-bold text-zinc-500 mb-3 uppercase tracking-widest">Следующий этап</p>
-                <ul class="text-sm font-semibold text-zinc-400 space-y-2">
-                    <li class="flex items-center"><span class="mr-3">—</span> Аудио- и видеозвонки</li>
-                    <li class="flex items-center"><span class="mr-3">—</span> Расширение модели профилей</li>
-                    <li class="flex items-center"><span class="text-pager mr-3">→</span> Дополнительные настройки приватности</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: Механика -->
-<section class="py-32 bg-black relative z-10 border-b border-white/10 overflow-hidden">
-    <div class="absolute inset-0 z-0 bg-tech-grid opacity-30 pointer-events-none"></div>
-
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-        <div class="text-center max-w-4xl mx-auto mb-20 reveal-up">
-            <div class="flex items-center justify-center gap-2 mb-6">
-                <span class="inline-block bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                    человек <span class="text-pager mx-1">→</span> условия связи <span class="text-pager mx-1">→</span> сообщение
-                </span>
-            </div>
-            <h2 class="font-heading text-4xl md:text-6xl mb-6 text-white tracking-tighter font-bold">
-                Правила видны до начала разговора.
-            </h2>
-            <p class="text-lg text-zinc-400 font-medium leading-relaxed mb-4">
-                Сегодня цифровое общение начинается с доступа: человек получает возможность написать или позвонить, а правила взаимодействия формируются уже после или вообще отсутствуют.
-            </p>
-            <p class="text-lg text-white font-bold leading-relaxed">
-                PAGER меняет этот порядок - сначала выбирается формат связи, затем начинается диалог.
-            </p>
-        </div>
-
-        <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-6 text-center">Три изменения в коммуникации</p>
-        <div class="grid md:grid-cols-3 gap-6 reveal-up">
-            <div class="glow-card p-8">
-                <span class="text-xl font-heading text-zinc-600 font-bold mb-4 block">01.</span>
-                <h4 class="text-lg font-bold mb-4 text-white">Общение начинается с выбора</h4>
-                <div class="mb-4 text-xs font-mono space-y-2 border-l border-white/20 pl-3">
-                    <p class="text-zinc-500">Текущая модель:<br><span class="line-through">контакт → доступ → общение</span></p>
-                    <p class="text-pager font-bold">Новая модель PAGER:<br>запрос → выбор формата → общение</p>
-                </div>
-                <p class="text-xs text-zinc-400 font-medium leading-relaxed">Новая модель позволяет начинать связи без немедленного раскрытия личного пространства.</p>
-            </div>
-            
-            <div class="glow-card p-8" style="transition-delay: 0.1s;">
-                <span class="text-xl font-heading text-zinc-600 font-bold mb-4 block">02.</span>
-                <h4 class="text-lg font-bold mb-4 text-white">Один профиль больше не подходит всем</h4>
-                <p class="text-xs text-zinc-400 font-medium leading-relaxed mb-4">Сегодня один цифровой профиль объединяет все отношения человека — личные, рабочие и новые знакомства.</p>
-                <p class="text-xs text-white font-bold leading-relaxed border-t border-white/10 pt-4">PAGER создает разные способы представления себя для разных типов связей.</p>
-            </div>
-            
-            <div class="glow-card p-8" style="transition-delay: 0.2s;">
-                <span class="text-xl font-heading text-zinc-600 font-bold mb-4 block">03.</span>
-                <h4 class="text-lg font-bold mb-4 text-white">Правила становятся частью общения</h4>
-                <p class="text-xs text-zinc-400 font-medium leading-relaxed mb-4">Сегодня правила общения существуют внутри настроек, а не внутри самой связи.</p>
-                <p class="text-xs text-white font-bold leading-relaxed border-t border-white/10 pt-4">PAGER делает правила частью самой связи: кто видит профиль, какие способы общения доступны и насколько долго действует доступ.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: Монетизация и Следующий этап -->
-<section class="py-32 bg-black relative z-10 border-b border-white/10" id="business">
-    <div class="max-w-7xl mx-auto px-6">
-        
-        <div class="mb-24 reveal-up">
-            <p class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4">Потенциал монетизации</p>
-            <h2 class="font-heading text-4xl md:text-5xl mb-4 text-white font-bold tracking-tight">Монетизация PAGER</h2>
-            <p class="text-base text-zinc-400 font-medium">От нового способа общения к новой коммуникационной платформе.</p>
-            
-            <div class="grid md:grid-cols-2 gap-6 mt-12">
-                <div class="glow-card p-10 flex flex-col relative">
-                    <h3 class="font-heading text-2xl mb-4 text-white font-bold">Premium</h3>
-                    <p class="text-zinc-400 text-sm mb-6 leading-relaxed h-10">Для пользователей, которым нужен расширенный контроль над своим цифровым присутствием:</p>
-                    <ul class="text-sm font-bold text-white flex-grow space-y-3">
-                        <li class="flex items-center"><span class="text-pager mr-3">•</span> уникальные РAGER ID;</li>
-                        <li class="flex items-center"><span class="text-pager mr-3">•</span> расширенные профили;</li>
-                        <li class="flex items-center"><span class="text-pager mr-3">•</span> дополнительные настройки представления и доступа;</li>
-                        <li class="flex items-center"><span class="text-pager mr-3">•</span> дополнительные возможности управления связями.</li>
-                    </ul>
-                </div>
-                
-                <div class="glow-card border-white/20 bg-[#050505] p-10 flex flex-col relative" style="transition-delay: 0.1s;">
-                    <h3 class="font-heading text-2xl mb-4 text-white font-bold">Business / B2B API</h3>
-                    <p class="text-zinc-400 text-sm mb-6 leading-relaxed h-10">Для компаний, которым нужна безопасная коммуникация без смешения личных и рабочих контактов:</p>
-                    <ul class="text-sm font-bold text-white flex-grow space-y-3">
-                        <li class="flex items-center"><span class="text-white mr-3">•</span> корпоративные профили;</li>
-                        <li class="flex items-center"><span class="text-white mr-3">•</span> рабочие пространства;</li>
-                        <li class="flex items-center"><span class="text-white mr-3">•</span> связь с клиентами без раскрытия личных номеров;</li>
-                        <li class="flex items-center"><span class="text-white mr-3">•</span> АРІ-интеграции.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="reveal-up">
-            <h2 class="font-heading text-3xl mb-10 text-white font-bold tracking-tight">Следующий этап развития</h2>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="glow-card p-6 flex flex-col">
-                    <h4 class="font-bold text-white text-lg mb-2">Расширение модели профилей</h4>
-                    <p class="text-xs text-pager font-bold mb-4">Больше способов присутствия</p>
-                    <p class="text-xs text-zinc-400 leading-relaxed mb-6">PAGER может расширять модель профилей: новые сценарии использования, варианты представления и разные способы взаимодействия внутри одного аккаунта.</p>
-                    <div class="mt-auto border-t border-white/5 pt-4">
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Статус:</p>
-                        <p class="text-xs font-bold text-white">После beta</p>
-                    </div>
-                </div>
-
-                <div class="glow-card p-6 flex flex-col">
-                    <h4 class="font-bold text-white text-lg mb-2">Premium PAGER ID</h4>
-                    <p class="text-xs text-pager font-bold mb-4">Идентификатор нового поколения</p>
-                    <p class="text-xs text-zinc-400 leading-relaxed mb-4">Короткий и запоминающийся ID для личного и профессионального использования.</p>
-                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Модель монетизации:</p>
-                    <p class="text-xs text-zinc-300 font-semibold mb-6">Premium ID, дополнительные возможности идентификатора.</p>
-                    <div class="mt-auto border-t border-white/5 pt-4">
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Статус:</p>
-                        <p class="text-xs font-bold text-white">После beta</p>
-                    </div>
-                </div>
-
-                <div class="glow-card p-6 flex flex-col">
-                    <h4 class="font-bold text-white text-lg mb-2">Расширенные возможности</h4>
-                    <p class="text-xs text-pager font-bold mb-4">Больше контроля над каждой связью</p>
-                    <p class="text-xs text-zinc-400 leading-relaxed mb-6">Новые способы коммуникации и более глубокое управление доступом, приватностью и правилами взаимодействия.</p>
-                    <div class="mt-auto border-t border-white/5 pt-4">
-                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Статус:</p>
-                        <p class="text-xs font-bold text-white">Развитие продукта</p>
-                    </div>
-                </div>
-
-                <div class="glow-card p-6 flex flex-col border-pager/30 bg-[#050505]">
-                    <h4 class="font-bold text-white text-lg mb-2">Будущее направление B2B / API</h4>
-                    <p class="text-xs text-pager font-bold mb-4">Инфраструктура коммуникации</p>
-                    <p class="text-xs text-zinc-400 leading-relaxed mb-6">Компании смогут создавать безопасные каналы связи с клиентами и сотрудниками без раскрытия личных контактов.</p>
-                    <div class="mt-auto border-t border-white/10 pt-4">
-                        <p class="text-[10px] text-pager uppercase tracking-widest mb-1">Статус:</p>
-                        <p class="text-xs font-bold text-white">В2В-гипотеза</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-10 text-center border-t border-white/10 pt-10">
-                <p class="text-sm text-zinc-400 font-medium">Сегодня PAGER меняет личное общение. В будущем эта же модель может стать инфраструктурой управления цифровыми связями между людьми и организациями.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: Финальный CTA -->
-<section class="py-32 bg-black relative z-10" id="cta">
-    <div class="max-w-4xl mx-auto px-6 text-center reveal-up">
-        <span class="text-[10px] font-bold text-pager uppercase tracking-widest mb-4 block">Следующий шаг</span>
-        <h2 class="font-heading text-4xl md:text-5xl mb-6 text-white font-bold tracking-tight">Присоединяйтесь к созданию нового формата общения</h2>
-        <p class="text-base text-zinc-400 mb-10 font-medium leading-relaxed max-w-2xl mx-auto">Мы показываем текущий продукт, ключевую механику PAGER, план private beta и следующие этапы развития платформы.</p>
-        <div class="flex flex-col items-center gap-6">
-            <!-- Functional link -->
-            <a href="mailto:investors@pager.app" class="btn-primary px-8 py-4 text-xs uppercase tracking-widest">Запросить презентацию и материалы</a>
-        </div>
-    </div>
-</section>
-
-<!-- БЛОК: Футер -->
-<footer class="bg-[#050505] py-8 border-t border-white/10 relative z-10">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
-        <div class="flex items-center space-x-6 mb-4 md:mb-0">
-            <span class="text-white text-sm font-heading font-bold">PAGER © 2026</span>
-            <span>Private communication</span>
-        </div>
-        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hover:text-white transition-colors border-b border-zinc-800 pb-0.5">Наверх ↑</button>
-    </div>
-</footer>
-
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function(){
 
-        // Initialize Lenis strictly synced with GSAP
-        let lenis;
-        if (!prefersReducedMotion) {
-            lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                smooth: true
-            });
+  var profiles = [
+    {
+      tag:'Personal',
+      name:'Alex Reyes',
+      desc:'Close friends and family.',
+      audience:'18 contacts',
+      color:'var(--personal)',
+      perms:[1,1,1]
+    },
+    {
+      tag:'Work',
+      name:'Quest Hero',
+      desc:'Product and client communication only.',
+      audience:'34 contacts',
+      color:'var(--work)',
+      perms:[1,1,0]
+    },
+    {
+      tag:'Guest',
+      name:'Temporary Contact',
+      desc:'Time-limited access, no history carried forward.',
+      audience:'3 contacts',
+      color:'var(--guest)',
+      perms:[1,0,0]
+    },
+    {
+      tag:'Alter Ego',
+      name:'Mr. Fox',
+      desc:'The best of me, off the record.',
+      audience:'5 contacts',
+      color:'var(--alter)',
+      perms:[1,1,0]
+    }
+  ];
 
-            gsap.registerPlugin(ScrollTrigger);
-            lenis.on('scroll', ScrollTrigger.update);
-            gsap.ticker.add((time) => { lenis.raf(time * 1000); });
-            gsap.ticker.lagSmoothing(0, 0);
-        } else {
-            gsap.registerPlugin(ScrollTrigger);
-        }
+  var reduced =
+    window
+      .matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      )
+      .matches;
 
-        // Smart Header
-        let lastScroll = 0;
-        const header = document.getElementById('smart-header');
-        if (lenis) {
-            lenis.on('scroll', (e) => {
-                const currentScroll = e.scroll;
-                if (currentScroll > 100 && currentScroll > lastScroll) {
-                    header.style.transform = 'translateY(-100%)'; 
-                } else {
-                    header.style.transform = 'translateY(0)'; 
-                }
-                lastScroll = currentScroll;
-            });
-        } else {
-            window.addEventListener('scroll', () => {
-                const currentScroll = window.scrollY;
-                if (currentScroll > 100 && currentScroll > lastScroll) {
-                    header.style.transform = 'translateY(-100%)'; 
-                } else {
-                    header.style.transform = 'translateY(0)'; 
-                }
-                lastScroll = currentScroll;
-            });
-        }
+  var section =
+    document.getElementById('mpSection');
 
-        // General Reveal
-        if (!prefersReducedMotion) {
-            gsap.utils.toArray('.reveal-up').forEach(elem => {
-                gsap.to(elem, {
-                    scrollTrigger: { trigger: elem, start: "top 85%" },
-                    y: 0, opacity: 1, duration: 0.8, ease: "power2.out"
-                });
-            });
-        }
+  var cards =
+    document.querySelectorAll(
+      '#mpDeck .id-card'
+    );
 
-        if (!prefersReducedMotion) {
-            
-            // Safe Text Splitting (only for pure text targets)
-            function splitTextToWords(selector) {
-                document.querySelectorAll(selector).forEach(el => {
-                    const text = el.textContent.trim();
-                    const words = text.split(/\s+/);
-                    el.innerHTML = '';
-                    words.forEach(word => {
-                        const span = document.createElement('span');
-                        span.className = 'k-word';
-                        span.innerHTML = word + '&nbsp;'; 
-                        el.appendChild(span);
-                    });
-                });
-            }
-            splitTextToWords('.k-split');
-            splitTextToWords('.k-split-final');
+  var screen =
+    document.getElementById(
+      'mpPhoneScreen'
+    );
 
-            // Initial States for Kinetic Hero
-            gsap.set("#h-text-l1 .k-word, #h-text-l2 .k-word, #h-text-l3 .k-word", { opacity: 0, x: -40, filter: "blur(8px)" });
-            gsap.set("#h-text-l1 .text-sup, #h-text-l2 .text-sup, #h-text-l3 .text-sup", { opacity: 0, x: -20 });
-            gsap.set("#h-text-r1 .k-word, #h-text-r2 .k-word, #h-text-r3 .k-word", { opacity: 0, x: 40, filter: "blur(8px)" });
+  var labels =
+    document.querySelectorAll(
+      '#mpLabels .mp-label'
+    );
 
-            // Native DOM Manifesto Intro
-            const tlManifesto = gsap.timeline({ delay: 0.1 });
-            tlManifesto.to("#manifesto-sup", { opacity: 1, duration: 0.8, ease: "power2.out" })
-                       .to(".m-line", { y: 0, duration: 1, ease: "power3.out", stagger: 0.1 }, "-=0.6")
-                       .fromTo("#hero-subtitle", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, "-=0.6");
+  var fill =
+    document.getElementById(
+      'mpProgressFill'
+    );
 
-            let mm = gsap.matchMedia();
+  var current = -1;
 
-            // DESKTOP HERO (Flex + Safe scrubbing)
-            mm.add("(min-width: 768px)", () => {
-                const hTl = gsap.timeline({
-                    scrollTrigger: { trigger: "#hero-story", start: "top top", end: "bottom bottom", scrub: 1 }
-                });
+  function applyProfile(i){
 
-                const stInL = { opacity: 1, x: 0, filter: "blur(0px)", stagger: 0.03, duration: 8, ease: "power2.out" };
-                const stInR = { opacity: 1, x: 0, filter: "blur(0px)", stagger: 0.03, duration: 8, ease: "power2.out" };
-                const stOutL = { opacity: 0, x: -60, filter: "blur(8px)", stagger: 0.02, duration: 6, ease: "power2.in" };
-                const stOutR = { opacity: 0, x: 60, filter: "blur(8px)", stagger: 0.02, duration: 6, ease: "power2.in" };
+    if(i === current) return;
 
-                hTl.to("#hero-subtitle", { opacity: 0, duration: 6 })
-                   .to("#h-img-1", { opacity: 1, filter: "brightness(1)", scale: 1, duration: 6 }, "<")
-                   
-                   // 1 IN
-                   .to("#h-text-l1 .text-sup", { opacity: 1, x: 0, duration: 4 }, "<")
-                   .to("#h-text-l1 .k-word", stInL, "<")
-                   .to("#h-text-r1 .k-word", stInR, "<")
-                   
-                   // 1 HOLD
-                   .to("#h-img-1", { scale: 1.03, duration: 25 })
-                   
-                   // 1 -> 2
-                   .to("#h-text-l1 .text-sup", { opacity: 0, x: -20, duration: 4 })
-                   .to("#h-text-l1 .k-word", stOutL, "<")
-                   .to("#h-text-r1 .k-word", stOutR, "<")
-                   .to("#h-img-1", { opacity: 0, scale: 1.06, filter: "brightness(0.5)", duration: 10 }, "<")
-                   
-                   .to("#h-img-2", { opacity: 1, scale: 1, duration: 10 }, "<")
-                   .to("#h-text-l2 .text-sup", { opacity: 1, x: 0, duration: 4 }, "-=4")
-                   .to("#h-text-l2 .k-word", stInL, "<")
-                   .to("#h-text-r2 .k-word", stInR, "<")
-                   
-                   // 2 HOLD
-                   .to("#h-img-2", { scale: 1.025, duration: 25 })
-                   
-                   // 2 -> 3
-                   .to("#h-text-l2 .text-sup", { opacity: 0, x: -20, duration: 4 })
-                   .to("#h-text-l2 .k-word", stOutL, "<")
-                   .to("#h-text-r2 .k-word", stOutR, "<")
-                   .to("#h-img-2", { opacity: 0, scale: 0.95, duration: 10 }, "<")
-                   
-                   .to("#h-img-3", { opacity: 1, scale: 1, duration: 10 }, "<")
-                   .to("#h-text-l3 .text-sup", { opacity: 1, x: 0, duration: 4 }, "-=4")
-                   .to("#h-text-l3 .k-word", stInL, "<")
-                   .to("#h-text-r3 .k-word", stInR, "<")
-                   .to("#h-text-r3-accent", { opacity: 1, duration: 6, ease: "power2.out" }, "-=2")
-                   
-                   // 3 HOLD
-                   .to("#h-img-3", { scale: 1.015, duration: 15 })
+    current = i;
 
-                   // FINAL OUT
-                   .to("#h-text-l3 .k-word", stOutL)
-                   .to("#h-text-l3 .text-sup", { opacity: 0, duration: 4 }, "<")
-                   .to("#h-text-r3 .k-word", stOutR, "<")
-                   .to("#h-text-r3-accent", { opacity: 0, duration: 4 }, "<")
-                   
-                   .to("#hero-final", { opacity: 1, pointerEvents: "auto", duration: 8 }, "<")
-                   .fromTo(".k-split-final .k-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.05, duration: 6 }, "<")
-                   .fromTo(".btn-container a", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.2, duration: 5 }, "<");
-            });
+    var p = profiles[i];
 
-            // MOBILE HERO (Flex + Fades)
-            mm.add("(max-width: 767px)", () => {
-                const mTl = gsap.timeline({
-                    scrollTrigger: { trigger: "#hero-story", start: "top top", end: "bottom bottom", scrub: 1 }
-                });
-                mTl.to("#hero-subtitle", { opacity: 0, duration: 10 })
-                   .to("#h-img-1", { opacity: 1, filter: "brightness(1)", scale: 1, duration: 10 }, "<")
-                   .to("#m-text-1", { opacity: 1, y: -10, duration: 10 }, "<")
-                   .to("#h-img-1", { scale: 1.02, duration: 20 })
-                   
-                   .to("#m-text-1", { opacity: 0, y: -20, duration: 10 })
-                   .to("#h-img-1", { opacity: 0, duration: 10 }, "<")
-                   .to("#h-img-2", { opacity: 1, scale: 1, duration: 10 }, "<")
-                   .to("#m-text-2", { opacity: 1, y: -10, duration: 10 }, "<")
-                   .to("#h-img-2", { scale: 1.02, duration: 20 })
-                   
-                   .to("#m-text-2", { opacity: 0, y: -20, duration: 10 })
-                   .to("#h-img-2", { opacity: 0, duration: 10 }, "<")
-                   .to("#h-img-3", { opacity: 1, scale: 1, duration: 10 }, "<")
-                   .to("#m-text-3", { opacity: 1, y: -10, duration: 10 }, "<")
-                   .to("#h-img-3", { scale: 1.01, duration: 10 })
-                   
-                   .to("#m-text-3", { opacity: 0, y: -20, duration: 7 })
-                   .fromTo("#hero-final", { opacity: 0, y: 20 }, { opacity: 1, y: 0, pointerEvents: "auto", duration: 7 }, "<");
-            });
-        }
+    screen.style.setProperty(
+      '--phone-color',
+      p.color
+    );
 
-        // ==================================================
-        // DEMO STORY-SCROLL LOGIC (Vercel Style Multiprofile)
-        // ==================================================
-        if(window.innerWidth >= 768) {
-            const steps = document.querySelectorAll('.story-step');
-            const storyImages = document.querySelectorAll('.story-img');
+    screen
+      .querySelector('.phone-tag')
+      .textContent = p.tag;
 
-            const observerOptions = {
-                root: null,
-                rootMargin: '-40% 0px -40% 0px', 
-                threshold: 0.1
-            };
+    screen
+      .querySelector('.phone-name')
+      .textContent = p.name;
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const stepIndex = entry.target.getAttribute('data-step');
-                        
-                        steps.forEach(s => s.classList.remove('is-active'));
-                        entry.target.classList.add('is-active');
+    screen
+      .querySelector('.phone-desc')
+      .textContent = p.desc;
 
-                        storyImages.forEach(img => img.classList.remove('active'));
-                        const activeImg = document.getElementById(`img-story-${stepIndex}`);
-                        if(activeImg) activeImg.classList.add('active');
-                    }
-                });
-            }, observerOptions);
+    screen
+      .querySelector('.phone-audience b')
+      .textContent = p.audience;
 
-            steps.forEach(step => observer.observe(step));
-        }
+    var perms =
+      screen.querySelectorAll('.perm');
 
-        window.addEventListener('load', () => {
-            ScrollTrigger.refresh();
-        });
+    perms.forEach(function(el, idx){
+      el.classList.toggle(
+        'on',
+        !!p.perms[idx]
+      );
+    });
+
+    labels.forEach(function(el){
+
+      var idx =
+        parseInt(
+          el.getAttribute('data-index'),
+          10
+        );
+
+      el.classList.toggle(
+        'active',
+        idx === i
+      );
 
     });
+
+    fill.style.width =
+      ((i + 1) / profiles.length * 100)
+      + '%';
+
+    fill.style.background =
+      p.color;
+
+    cards.forEach(function(card){
+
+      var idx =
+        parseInt(
+          card.getAttribute('data-idx'),
+          10
+        );
+
+      var pos =
+        (idx - i + profiles.length)
+        % profiles.length;
+
+      card.setAttribute(
+        'data-pos',
+        pos
+      );
+
+    });
+  }
+
+  applyProfile(0);
+
+  function onScroll(){
+
+    var rect =
+      section.getBoundingClientRect();
+
+    var total =
+      rect.height - window.innerHeight;
+
+    if(total <= 0) return;
+
+    var progress =
+      (-rect.top) / total;
+
+    progress =
+      Math.min(
+        1,
+        Math.max(0, progress)
+      );
+
+    var i =
+      Math.min(
+        profiles.length - 1,
+        Math.floor(
+          progress * profiles.length
+        )
+      );
+
+    applyProfile(i);
+  }
+
+  var ticking = false;
+
+  window.addEventListener(
+    'scroll',
+    function(){
+
+      if(!ticking){
+
+        window.requestAnimationFrame(
+          function(){
+            onScroll();
+            ticking = false;
+          }
+        );
+
+        ticking = true;
+      }
+
+    },
+    { passive: true }
+  );
+
+  onScroll();
+
+})();
 </script>
+
+</body>
+</html>
